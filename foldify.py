@@ -1205,6 +1205,408 @@ class FoldabilityChecker:
             "vertex_count": len(cp.vertices)
         }
 
+class FoldedModel:
+    """
+    Модель сложенного оригами, содержащая информацию о трансформированных гранях.
+
+    Attributes:
+        faces (list): Список граней с учётом трансформаций при складывании.
+        overlaps_resolved (bool): Флаг, указывающий, был ли разрешен порядок наложения слоёв.
+        error (str): Сообщение об ошибке, если порядок слоёв не может быть разрешен.
+    """
+    def __init__(self):
+        """
+        Инициализировать пустую модель сложенного оригами.
+        """
+        self.faces: List[OriFace] = []
+        self.overlaps_resolved = False
+        self.error: Optional[str] = None
+
+class StackingAnalyzer:
+    """
+    Класс для анализа и определения порядка наложения слоёв при складывании.
+
+    Использует информацию о типах складок (гора/долина) для определения,
+    какие грани находятся выше других после складывания.
+    """
+    @staticmethod
+    def estimate_layer_order(cp: CreasePattern, faces: List[OriFace]) -> FoldedModel:
+        """
+        Определить порядок наложения слоёв на основе паттерна складок.
+
+        Использует граничные условия (складка гора = грань сверху, долина = грань снизу)
+        и логический вывод для определения полного порядка слоёв.
+
+        Args:
+            cp (CreasePattern): Паттерн складок.
+            faces (list): Список граней паттерна.
+
+        Returns:
+            FoldedModel: Модель с определённым порядком слоёв (z_order для каждой грани).
+                        Если порядок не может быть определён, возвращает модель с ошибкой.
+        """
+        model = FoldedModel()
+        model.faces = copy.deepcopy(faces)
+
+        if not faces:
+            model.error = "Нет граней"
+            return model
+
+        n = len(model.faces)
+        relations: List[List[LayerRelation]] = [
+            [LayerRelation.UNKNOWN] * n for _ in range(n)
+        ]
+
+        for face1_idx, face1 in enumerate(model.faces):
+            for he in face1.halfedges:
+                edge = he.edge
+                if not edge.is_fold_edge():
+                    continue
+                opp_he = he.opposite
+                if opp_he is None or opp_he.face is None:
+                    continue
+
+                face2 = opp_he.face
+                face2_idx = next(i for i, f in enumerate(model.faces) if f is face2)
+
+                if edge.type == LineType.MOUNTAIN:
+                    relations[face1_idx][face2_idx] = LayerRelation.ABOVE
+                    relations[face2_idx][face1_idx] = LayerRelation.BELOW
+                elif edge.type == LineType.VALLEY:
+                    relations[face1_idx][face2_idx] = LayerRelation.BELOW
+                    relations[face2_idx][face1_idx] = LayerRelation.ABOVE
+
+        changed = True
+        while changed:
+            changed = False
+            for i in range(n):
+                for j in range(n):
+                    if i == j or relations[i][j] == LayerRelation.UNKNOWN:
+                        continue
+                    for k in range(n):
+                        if relations[j][k] == LayerRelation.UNKNOWN:
+                            continue
+
+                        expected = relations[i][j] * relations[j][k]
+                        if expected == 0:
+                            continue
+
+                        new_rel = LayerRelation(1 if expected > 0 else -1)
+
+                        if relations[i][k] == LayerRelation.UNKNOWN:
+                            relations[i][k] = new_rel
+                            relations[k][i] = LayerRelation(-new_rel.value)
+                            changed = True
+                        elif relations[i][k] != new_rel:
+                            model.error = f"Конфликт порядка слоёв между гранями {i} и {k}"
+                            return model
+
+        z_values = [0] * n
+        used_z = set()
+
+        def assign_z(idx: int, z: int) -> bool:
+            """
+            Рекурсивно назначить значение z-порядка грани и всем связанным граням.
+
+            Args:
+                idx (int): Индекс текущей грани в массиве граней.
+                z (int): Значение z-порядка для назначения этой грани.
+
+            Returns:
+                bool: True, если z-порядок успешно назначен для всей цепочки граней.
+                      False, если обнаружен конфликт (противоречие в отношениях слоёв).
+            """
+            if z_values[idx] != 0 and z_values[idx] != z:
+                return False
+            if z_values[idx] == z:
+                return True
+            if z in used_z:
+                return False
+
+            z_values[idx] = z
+            used_z.add(z)
+
+            for other_idx in range(n):
+                rel = relations[idx][other_idx]
+                if rel == LayerRelation.ABOVE:
+                    if not assign_z(other_idx, z - 1):
+                        return False
+                elif rel == LayerRelation.BELOW:
+                    if not assign_z(other_idx, z + 1):
+                        return False
+            return True
+
+        largest_idx = max(range(n), key=lambda i: model.faces[i].area())
+        if not assign_z(largest_idx, 0):
+            model.error = "Не удалось разрешить порядок слоёв"
+            return model
+
+        if all(z == 0 for z in z_values):
+            min_z = 0
+        else:
+            min_z = min(z for z in z_values if z != 0)
+
+        for i, z in enumerate(z_values):
+            model.faces[i].z_order = z - min_z
+
+        model.overlaps_resolved = True
+        return model
+
+class GeometryUtil:
+    """
+    Утилита для геометрических вычислений и преобразований.
+
+    Содержит статические методы для отражения точек и поворота относительно центра.
+    """
+    @staticmethod
+    def reflect_point_over_line(point: Point2D, line_p0: Point2D, line_p1: Point2D) -> Point2D:
+        """
+        Отразить точку относительно линии.
+
+        Вычисляет проекцию точки на линию, а затем отражает точку
+        относительно этой проекции.
+
+        Args:
+            point (Point2D): Точка для отражения.
+            line_p0 (Point2D): Начало линии отражения.
+            line_p1 (Point2D): Конец линии отражения.
+
+        Returns:
+            Point2D: Отражённая точка.
+        """
+        px, py = point.x, point.y
+        x1, y1 = line_p0.x, line_p0.y
+        x2, y2 = line_p1.x, line_p1.y
+
+        dx = x2 - x1
+        dy = y2 - y1
+        if abs(dx) < EPS and abs(dy) < EPS:
+            return point
+
+        t = ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy)
+        proj_x = x1 + t * dx
+        proj_y = y1 + t * dy
+
+        rx = 2 * proj_x - px
+        ry = 2 * proj_y - py
+        return Point2D(rx, ry)
+
+    @staticmethod
+    def rotate_point_180(center: Point2D, point: Point2D) -> Point2D:
+        """
+        Повернуть точку на 180 градусов относительно центра.
+
+        Эквивалентно отражению точки относительно центра.
+
+        Args:
+            center (Point2D): Центр поворота.
+            point (Point2D): Точка для поворота.
+
+        Returns:
+            Point2D: Повёрнутая точка.
+        """
+        return center + (center - point)
+
+class FoldedModelBuilder:
+    """
+    Класс для преобразования паттерна складок в трёхмерную модель.
+    """
+
+    @staticmethod
+    def build_folded_model(cp: CreasePattern, model: FoldedModel) -> List[OriFace]:
+        """
+        Построить трёхмерную модель из паттерна складок и порядка слоёв.
+
+        Трансформирует контуры граней в соответствии с типами складок (гора/долина).
+        Для гор граница отражается относительно линии складки.
+        Для долин граница отражается и затем поворачивается на 180°.
+
+        Args:
+            cp (CreasePattern): Паттерн складок.
+            model (FoldedModel): Модель со скрытым порядком слоёв.
+
+        Returns:
+            list: Список трансформированных граней (OriFace), отсортированных по z_order.
+        """
+        if not model.faces:
+            return []
+
+        outlines = {}
+        transformed = set()
+
+        for face in model.faces:
+            outlines[id(face)] = list(face.outline)
+
+        for orig_face in model.faces:
+            face_id = id(orig_face)
+
+            if face_id in transformed:
+                continue
+
+            for he in orig_face.halfedges:
+                edge = he.edge
+
+                if not edge.is_fold_edge():
+                    continue
+
+                opp_he = he.opposite
+                if not opp_he or not opp_he.face:
+                    continue
+
+                neighbor_face = opp_he.face
+                neighbor_z = neighbor_face.z_order
+                my_z = orig_face.z_order
+
+                # Если сосед находится НИЖЕ текущей грани
+                if neighbor_z < my_z:
+                    # Трансформируем текущую грань ЭТО И ТОЛЬКО ЭТО
+                    p0 = edge.sv.p
+                    p1 = edge.ev.p
+
+                    new_outline = [
+                        GeometryUtil.reflect_point_over_line(p, p0, p1)
+                        for p in outlines[face_id]
+                    ]
+
+                    if edge.type == LineType.VALLEY:
+                        center = edge.line.midpoint()
+                        new_outline = [
+                            GeometryUtil.rotate_point_180(center, p)
+                            for p in new_outline
+                        ]
+
+                    outlines[face_id] = new_outline
+                    transformed.add(face_id)
+                    break
+
+        result_faces = []
+        for face in model.faces:
+            face_copy = copy.deepcopy(face)
+            face_copy.outline = outlines[id(face)]
+            face_copy.build_outline()
+            result_faces.append(face_copy)
+
+        result_faces.sort(key=lambda f: f.z_order)
+        return result_faces
+
+
+class OrigamiFolder:
+    """
+    Основной класс для полного процесса складывания паттерна оригами.
+
+    Координирует построение граней, проверку складываемости, анализ порядка
+    слоёв и построение трёхмерной модели.
+    """
+
+    @staticmethod
+    def fold_crease_pattern(cp: CreasePattern) -> Dict[str, Any]:
+        """
+        Выполнить полный процесс складывания паттерна.
+
+        Последовательно:
+        1. Строит грани из паттерна
+        2. Проверяет условия Маекавы и Кавасаки
+        3. Определяет порядок наложения слоёв
+        4. Трансформирует грани в трёхмерную модель
+
+        Args:
+            cp (CreasePattern): Паттерн складок для складывания.
+
+        Returns:
+            dict: Словарь с ключами:
+                  - "success" (bool): Успешно ли выполнено складывание.
+                  - "folded_faces" (list): Список трансформированных граней (если успешно).
+                  - "original_faces" (list): Исходные грани до трансформации.
+                  - "crease_pattern" (CreasePattern): Использованный паттерн.
+                  - "errors" (list): Список ошибок (если неудачно).
+        """
+        faces = FaceBuilder.build_faces(cp)
+        if not faces:
+            return {"success": False, "errors": ["Не удалось построить грани (возможно, топология нарушена)"]}
+
+        check_result = FoldabilityChecker.full_foldability_check(cp, faces)
+        if not check_result["foldable"]:
+            return {"success": False, "errors": check_result["errors"]}
+
+        stacked_model = StackingAnalyzer.estimate_layer_order(cp, faces)
+        if stacked_model.error:
+            return {"success": False, "errors": [stacked_model.error]}
+
+        folded_faces = FoldedModelBuilder.build_folded_model(cp, stacked_model)
+
+        return {
+            "success": True,
+            "folded_faces": folded_faces,
+            "original_faces": faces,
+            "crease_pattern": cp
+        }
+
+class FoldViewer(wx.Frame):
+    """
+    Окно для трёхмерной визуализации сложенного оригами.
+
+    Отображает слои модели с различными оттенками в зависимости от z_order.
+    Более высокие слои имеют более интенсивный цвет.
+
+    Attributes:
+        folded_faces (list): Список граней модели для отображения.
+        panel (wx.Panel): Панель для рисования.
+    """
+
+    def __init__(self, parent, folded_faces):
+        """
+        Инициализировать окно просмотра сложенной модели.
+
+        Args:
+            parent: Родительское окно.
+            folded_faces (list): Список граней OriFace для отображения.
+        """
+        super().__init__(parent, title="Сложенная модель", size=(800, 800))
+        self.folded_faces = folded_faces
+        self.panel = wx.Panel(self)
+        self.panel.Bind(wx.EVT_PAINT, self.on_paint)
+        self.Centre()
+        self.Show()
+
+    def on_paint(self, event):
+        """
+        Обработчик события рисования (перерисовка модели).
+
+        Отрисовывает все грани модели с сортировкой по z_order,
+        используя полупрозрачные полигоны для изображения слоёв.
+
+        Args:
+            event: Событие рисования wxPython.
+        """
+        dc = wx.PaintDC(self.panel)
+        dc.Clear()
+        dc.SetBackground(wx.Brush(wx.Colour(255, 255, 255)))
+        dc.Clear()
+
+        w, h = self.panel.GetSize()
+        margin = 40
+        size = min(w, h) - 2 * margin
+        scale = size / 2.0
+        cx, cy = w // 2, h // 2
+
+        for face in sorted(self.folded_faces, key=lambda f: f.z_order):
+            if len(face.outline) < 3:
+                continue
+
+            intensity = 80 + face.z_order * 30
+            color = wx.Colour(80, 100, min(255, intensity + 80), alpha=220)
+
+            dc.SetBrush(wx.Brush(color))
+            dc.SetPen(wx.Pen(wx.Colour(0, 0, 0), 2))
+
+            points = []
+            for p in face.outline:
+                x = cx + p.x * scale
+                y = cy - p.y * scale
+                points.append(wx.Point(int(x), int(y)))
+
+            dc.DrawPolygon(points)
+
 class ErrorViewer(wx.Frame):
     """
     Окно для визуализации паттерна складок с отмеченными проблемными вершинами.
@@ -1458,6 +1860,9 @@ class Foldify(wx.Frame):
         self.redo_button = wx.Button(self.control_panel, label="Повтор")
         self.check_button = wx.Button(self.control_panel, label="Проверить складывание")
 
+        self.fold_button = wx.Button(self.control_panel, label="Сложить")
+        self.fold_button.Bind(wx.EVT_BUTTON, self.on_fold)
+
         self.undo_button.Bind(wx.EVT_BUTTON, self.on_undo)
         self.redo_button.Bind(wx.EVT_BUTTON, self.on_redo)
         self.check_button.Bind(wx.EVT_BUTTON, self.on_check_foldability)
@@ -1483,6 +1888,7 @@ class Foldify(wx.Frame):
         bottom_sizer.Add(self.undo_button, 0, wx.ALL | wx.EXPAND, 5)
         bottom_sizer.Add(self.redo_button, 0, wx.ALL | wx.EXPAND, 5)
         bottom_sizer.Add(self.check_button, 0, wx.ALL | wx.EXPAND, 5)
+        bottom_sizer.Add(self.fold_button, 0, wx.ALL | wx.EXPAND, 5)
 
         ctrl_sizer = wx.BoxSizer(wx.VERTICAL)
         ctrl_sizer.Add(top_sizer, 0, wx.EXPAND)
@@ -1540,6 +1946,56 @@ class Foldify(wx.Frame):
 
         cp.build_graph()
         return cp
+
+    def on_fold(self, event):
+        """
+        Обработчик кнопки "Сложить".
+
+        Выполняет полный процесс складывания:
+        1. Проверяет складываемость
+        2. Если ошибки - показывает их в ErrorViewer
+        3. Если OK - построить модель и показать в FoldViewer
+
+        Args:
+            event: Событие кнопки wxPython.
+        """
+
+        # Сначала выполняем проверку складываемости
+        check_result = self.check_foldability()
+
+        if not check_result["foldable"]:
+            # Показываем окно с визуализацией ошибок вместо MessageBox
+            error_vertices = [Point2D(p[0], p[1]) if isinstance(p, tuple) else p
+                              for p in check_result["problem_vertices"]]
+            ErrorViewer(self, check_result["crease_pattern"], error_vertices)
+            return
+
+        # Если проверка пройдена, продолжаем со складыванием
+        cp = self.create_crease_pattern()
+        result = OrigamiFolder.fold_crease_pattern(cp)
+
+        if not result["success"]:
+            # Этот блок теперь должен срабатывать редко, только при других ошибках
+            error_text = "\n".join(f"• {e}" for e in result["errors"])
+            wx.MessageBox(f"Возникли проблемы при складывании:\n\n{error_text}",
+                          "Ошибка складывания", wx.OK | wx.ICON_ERROR)
+            return
+
+        folded_faces = result["folded_faces"]
+
+        if len(self.rel_lines) == 0 or all(ltype == self.LINE_AUX for _, _, ltype in self.rel_lines):
+            single_face = OriFace()
+            half = 1.0
+            single_face.outline = [
+                Point2D(-half, -half),
+                Point2D(half, -half),
+                Point2D(half, half),
+                Point2D(-half, half),
+            ]
+            single_face.z_order = 0
+            FoldViewer(self, [single_face])
+        else:
+            FoldViewer(self, folded_faces)
 
     def load_icon(self, path):
         """
