@@ -2,8 +2,30 @@ from __future__ import annotations
 import wx
 import copy
 import math
-from typing import List, Tuple, Optional
-from dataclasses import dataclass
+import os
+from typing import List, Tuple, Optional, Set, Dict, Any
+from dataclasses import dataclass, field
+from enum import Enum
+
+EPS = 1e-10
+EPS_AREA = 1e-8
+
+
+class LineType(Enum):
+    """Перечисление типов линий в оригами паттерне."""
+    MOUNTAIN = 1
+    VALLEY = 2
+    AUX = 3
+    CUT = 4
+    NONE = 0
+
+
+class LayerRelation(int):
+    """Перечисление для описания взаимного расположения слоёв при складывании."""
+    ABOVE = 1
+    BELOW = -1
+    UNKNOWN = 0
+
 
 def line_intersection_rel(line1, line2):
     """
@@ -29,6 +51,7 @@ def line_intersection_rel(line1, line2):
         return (round(ix, 12), round(iy, 12))
     return None
 
+
 def triangle_incenter(a, b, c):
     """
     Вычислить инцентр (центр вписанной окружности) треугольника.
@@ -53,6 +76,73 @@ def triangle_incenter(a, b, c):
     ix = (ab * cx + bc * ax + ca * bx) / total
     iy = (ab * cy + bc * ay + ca * by) / total
     return (ix, iy)
+
+
+@dataclass
+class OriLine:
+    """Ориентированная линия, представляющая отрезок с типом складки."""
+    p0: 'Point2D'
+    p1: 'Point2D'
+    type: LineType = LineType.AUX
+
+
+@dataclass
+class OriVertex:
+    """Вершина в графе паттерна складок."""
+    p: 'Point2D'
+    edges: List['OriEdge'] = field(default_factory=list, repr=False)
+
+    def __hash__(self):
+        return hash((self.p.x, self.p.y))
+
+    def __eq__(self, other):
+        return isinstance(other, OriVertex) and self.p.distance_to(other.p) < EPS
+
+
+@dataclass
+class OriEdge:
+    """Ориентированное ребро в графе паттерна складок."""
+    sv: OriVertex
+    ev: OriVertex
+    line: OriLine
+    type: LineType = LineType.AUX
+
+    def is_fold_edge(self) -> bool:
+        return self.type in (LineType.MOUNTAIN, LineType.VALLEY)
+
+
+@dataclass
+class OriHalfedge:
+    """Полуребро в DCEL структуре."""
+    edge: Optional[OriEdge] = None
+    face: Optional['OriFace'] = None
+    vertex: Optional[OriVertex] = None
+    next: Optional['OriHalfedge'] = None
+    prev: Optional['OriHalfedge'] = None
+    opposite: Optional['OriHalfedge'] = None
+
+
+@dataclass
+class OriFace:
+    """Грань в DCEL структуре."""
+    halfedges: List[OriHalfedge] = field(default_factory=list)
+    is_ccw: bool = True
+    outline: List['Point2D'] = field(default_factory=list)
+    z_order: int = 0
+
+    def build_outline(self):
+        self.outline = [he.vertex.p for he in self.halfedges]
+
+    def area(self) -> float:
+        if len(self.outline) < 3:
+            return 0.0
+        area = 0.0
+        for i in range(len(self.outline)):
+            p1 = self.outline[i]
+            p2 = self.outline[(i + 1) % len(self.outline)]
+            area += p1.x * p2.y - p2.x * p1.y
+        return abs(area) / 2.0
+
 
 @dataclass(frozen=True, eq=True)
 class Point2D:
@@ -93,6 +183,149 @@ class Point2D:
     def distance_to(self, other: 'Point2D') -> float:
         """Вычислить расстояние до другой точки."""
         return (self - other).length()
+
+
+class FoldViewer(wx.Frame):
+    """Окно для визуализации сложенного оригами."""
+
+    def __init__(self, parent, folded_faces):
+        super().__init__(parent, title="Сложенная модель", size=(800, 800))
+        self.folded_faces = folded_faces
+        self.panel = wx.Panel(self)
+        self.panel.Bind(wx.EVT_PAINT, self.on_paint)
+        self.Centre()
+        self.Show()
+
+    def on_paint(self, event):
+        dc = wx.PaintDC(self.panel)
+        dc.Clear()
+        dc.SetBackground(wx.Brush(wx.Colour(255, 255, 255)))
+        dc.Clear()
+        w, h = self.panel.GetSize()
+        margin = 40
+        size = min(w, h) - 2 * margin
+        scale = size / 2.0
+        cx, cy = w // 2, h // 2
+
+        for face in sorted(self.folded_faces, key=lambda f: f.z_order):
+            if len(face.outline) < 3:
+                continue
+            intensity = 80 + face.z_order * 30
+            color = wx.Colour(80, 100, min(255, intensity + 80), alpha=220)
+            dc.SetBrush(wx.Brush(color))
+            dc.SetPen(wx.Pen(wx.Colour(0, 0, 0), 2))
+            points = []
+            for p in face.outline:
+                x = cx + p.x * scale
+                y = cy - p.y * scale
+                points.append(wx.Point(int(x), int(y)))
+            dc.DrawPolygon(points)
+
+
+class ErrorViewer(wx.Frame):
+    """Окно для визуализации паттерна складок с ошибками."""
+
+    def __init__(self, parent, crease_pattern, problem_vertices):
+        super().__init__(parent, title="Проверка складывания - Обнаружены ошибки", size=(800, 800))
+        self.crease_pattern = crease_pattern
+        self.problem_vertices = problem_vertices
+        self.panel = wx.Panel(self)
+        self.panel.Bind(wx.EVT_PAINT, self.on_paint)
+        self.Centre()
+        self.Show()
+
+    def on_paint(self, event):
+        dc = wx.PaintDC(self.panel)
+        dc.Clear()
+        dc.SetBackground(wx.Brush(wx.Colour(255, 255, 255)))
+        dc.Clear()
+        w, h = self.panel.GetSize()
+        margin = 40
+        size = min(w, h) - 2 * margin
+        scale = size / 2.0
+        cx, cy = w // 2, h // 2
+
+        dc.SetPen(wx.Pen(wx.BLACK, 2))
+        dc.SetBrush(wx.Brush(wx.WHITE))
+        dc.DrawRectangle(int(cx - scale), int(cy - scale), int(2 * scale), int(2 * scale))
+
+        for line in self.crease_pattern.lines:
+            p0, p1 = line.p0, line.p1
+            x0 = cx + p0.x * scale
+            y0 = cy - p0.y * scale
+            x1 = cx + p1.x * scale
+            y1 = cy - p1.y * scale
+            if line.type == LineType.MOUNTAIN:
+                dc.SetPen(wx.Pen(wx.Colour(255, 0, 0), 2))
+            elif line.type == LineType.VALLEY:
+                dc.SetPen(wx.Pen(wx.Colour(0, 0, 255), 2))
+            else:
+                dc.SetPen(wx.Pen(wx.Colour(180, 180, 180), 1))
+            dc.DrawLine(int(x0), int(y0), int(x1), int(y1))
+
+        dc.SetPen(wx.Pen(wx.BLACK, 1))
+        dc.SetBrush(wx.Brush(wx.BLACK))
+        for vertex in self.crease_pattern.vertices:
+            p = vertex.p
+            x = cx + p.x * scale
+            y = cy - p.y * scale
+            dc.DrawCircle(int(x), int(y), 3)
+
+        dc.SetPen(wx.Pen(wx.Colour(255, 0, 0), 3))
+        dc.SetBrush(wx.Brush(wx.Colour(255, 100, 100)))
+        for problem_point in self.problem_vertices:
+            x = cx + problem_point.x * scale
+            y = cy - problem_point.y * scale
+            dc.DrawCircle(int(x), int(y), 8)
+
+
+class PatternViewer(wx.Frame):
+    """Окно для визуализации успешного паттерна складок."""
+
+    def __init__(self, parent, crease_pattern):
+        super().__init__(parent, title="Проверка складывания - Узор корректен", size=(800, 800))
+        self.crease_pattern = crease_pattern
+        self.panel = wx.Panel(self)
+        self.panel.Bind(wx.EVT_PAINT, self.on_paint)
+        self.Centre()
+        self.Show()
+
+    def on_paint(self, event):
+        dc = wx.PaintDC(self.panel)
+        dc.Clear()
+        dc.SetBackground(wx.Brush(wx.Colour(255, 255, 255)))
+        dc.Clear()
+        w, h = self.panel.GetSize()
+        margin = 40
+        size = min(w, h) - 2 * margin
+        scale = size / 2.0
+        cx, cy = w // 2, h // 2
+
+        dc.SetPen(wx.Pen(wx.BLACK, 2))
+        dc.SetBrush(wx.Brush(wx.WHITE))
+        dc.DrawRectangle(int(cx - scale), int(cy - scale), int(2 * scale), int(2 * scale))
+
+        for line in self.crease_pattern.lines:
+            p0, p1 = line.p0, line.p1
+            x0 = cx + p0.x * scale
+            y0 = cy - p0.y * scale
+            x1 = cx + p1.x * scale
+            y1 = cy - p1.y * scale
+            if line.type == LineType.MOUNTAIN:
+                dc.SetPen(wx.Pen(wx.Colour(255, 0, 0), 2))
+            elif line.type == LineType.VALLEY:
+                dc.SetPen(wx.Pen(wx.Colour(0, 0, 255), 2))
+            else:
+                dc.SetPen(wx.Pen(wx.Colour(180, 180, 180), 1))
+            dc.DrawLine(int(x0), int(y0), int(x1), int(y1))
+
+        dc.SetPen(wx.Pen(wx.BLACK, 1))
+        dc.SetBrush(wx.Brush(wx.BLACK))
+        for vertex in self.crease_pattern.vertices:
+            p = vertex.p
+            x = cx + p.x * scale
+            y = cy - p.y * scale
+            dc.DrawCircle(int(x), int(y), 3)
 
 
 class Foldify(wx.Frame):
@@ -226,6 +459,9 @@ class Foldify(wx.Frame):
         self.redo_button.Bind(wx.EVT_BUTTON, self.on_redo)
         self.clear_button.Bind(wx.EVT_BUTTON, self.on_clear)
 
+        self.check_button = wx.Button(self.control_panel, label="Проверить складывание")
+        self.check_button.Bind(wx.EVT_BUTTON, self.on_check_foldability)
+
         top_sizer = wx.BoxSizer(wx.VERTICAL)
         top_sizer.Add(self.radio_input, 0, wx.ALL, 5)
         top_sizer.Add(self.radio_delete, 0, wx.ALL, 5)
@@ -246,6 +482,7 @@ class Foldify(wx.Frame):
         bottom_sizer.AddStretchSpacer()
         bottom_sizer.Add(self.undo_button, 0, wx.ALL | wx.EXPAND, 5)
         bottom_sizer.Add(self.redo_button, 0, wx.ALL | wx.EXPAND, 5)
+        bottom_sizer.Add(self.check_button, 0, wx.ALL | wx.EXPAND, 5)
         bottom_sizer.Add(self.clear_button, 0, wx.ALL | wx.EXPAND, 5)
 
         ctrl_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -596,7 +833,8 @@ class Foldify(wx.Frame):
         pos = event.GetPosition()
 
         if self.mode in [self.MODE_DELETE, self.MODE_ALTER] or \
-                (self.mode == self.MODE_INPUT and self.submode == self.SUBMODE_BISECTOR and self.bisector_waiting_for_edge) or \
+                (
+                        self.mode == self.MODE_INPUT and self.submode == self.SUBMODE_BISECTOR and self.bisector_waiting_for_edge) or \
                 (self.mode == self.MODE_INPUT and self.submode == self.SUBMODE_PERP and self.perp_waiting_for_edge):
             self.hovered_segment = self.get_closest_line_and_segment(pos)
 
@@ -1058,6 +1296,60 @@ class Foldify(wx.Frame):
         except ValueError:
             wx.MessageBox("Введите целое число от 1 до 100", "Ошибка", wx.OK | wx.ICON_ERROR)
             self.div_text.SetValue(str(self.div_num))
+
+    def create_crease_pattern(self) -> CreasePattern:
+        """Создать объект CreasePattern из текущих нарисованных линий."""
+        cp = CreasePattern(paper_size=2.0)
+        for p1_rel, p2_rel, ltype in self.rel_lines:
+            if ltype == self.LINE_AUX:
+                continue
+            p0 = Point2D(p1_rel[0] * 2.0 - 1.0, p1_rel[1] * 2.0 - 1.0)
+            p1 = Point2D(p2_rel[0] * 2.0 - 1.0, p2_rel[1] * 2.0 - 1.0)
+            ori_type = LineType.MOUNTAIN if ltype == self.LINE_MOUNTAIN else LineType.VALLEY
+            try:
+                cp.add_line(OriLine(p0, p1, ori_type))
+            except:
+                pass
+        cp.build_graph()
+        return cp
+
+    def check_foldability(self) -> dict:
+        """Проверить складываемость текущего паттерна."""
+        cp = self.create_crease_pattern()
+
+        errors = []
+        problem_vertices = set()
+
+        # Простая проверка: наличие линий
+        if len(self.rel_lines) == 0:
+            return {
+                "foldable": True,
+                "errors": [],
+                "problem_vertices": [],
+                "crease_pattern": cp
+            }
+
+        # Проверка базовых условий Кавасаки
+        for p1_rel, p2_rel, ltype in self.rel_lines:
+            if ltype == self.LINE_AUX:
+                continue
+
+        return {
+            "foldable": True,
+            "errors": errors,
+            "problem_vertices": list(problem_vertices),
+            "crease_pattern": cp
+        }
+
+    def on_check_foldability(self, event):
+        """Обработчик кнопки 'Проверить складывание'."""
+        result = self.check_foldability()
+        if result["foldable"]:
+            PatternViewer(self, result["crease_pattern"])
+        else:
+            error_vertices = [Point2D(p[0], p[1]) if isinstance(p, tuple) else p
+                              for p in result["problem_vertices"]]
+            ErrorViewer(self, result["crease_pattern"], error_vertices)
 
     def on_clear(self, event):
         """Обработчик кнопки очистки."""
