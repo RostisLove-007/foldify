@@ -658,7 +658,6 @@ class TestTriangleIncenter:
         b = (3, 0)
         c = (0, 4)
         center = triangle_incenter(a, b, c)
-        # Инцентр должен быть внутри треугольника
         assert 0 < center[0] < 3
         assert 0 < center[1] < 4
 
@@ -727,12 +726,12 @@ class TestIntegration:
         p2 = Point2D(3, 4)
         p3 = Point2D(5, 6)
 
-        v1 = p2 - p1  # (2, 2)
-        v2 = p3 - p2  # (2, 2)
+        v1 = p2 - p1
+        v2 = p3 - p2
 
         assert v1.cross(v2) == 0
 
-        combined = v1 + v2  # (4, 4)
+        combined = v1 + v2
         assert combined.length() == 4 * math.sqrt(2)
 
     def test_point_transformations_roundtrip(self):
