@@ -1,0 +1,1201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "DTD/xhtml1-strict.dtd">
+<html>
+  
+
+  <head>
+    
+    <title>foldify.Point2D</title>
+    <meta name="generator" content="pydoctor 25.10.1"> 
+        
+    </meta>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1" />
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="apidocs.css" />
+    <link rel="stylesheet" type="text/css" href="extra.css" />
+    
+</head>
+
+  <body>
+
+    
+
+    <nav class="navbar navbar-default mainnavbar">
+      
+  
+  <div class="container-fluid">
+
+
+    <div class="navbar-header">
+      
+      <div class="navlinks">
+        <span class="navbar-brand">
+          foldify <a href="index.html">API Documentation</a>
+        </span>
+
+        <a href="moduleIndex.html">
+          Modules
+        </a>
+
+        <a href="classIndex.html">
+          Classes
+        </a>
+
+        <a href="nameIndex.html">
+          Names
+        </a>
+
+        <div id="search-box-container">
+          <div class="input-group">
+            <input id="search-box" type="search" name="search-query" placeholder="Search..." aria-label="Search" minlength="2" class="form-control" autocomplete="off" />
+            
+            <span class="input-group-btn">
+              <a style="display: none;" class="btn btn-default" id="search-clear-button" title="Clear" onclick="clearSearch()"><img src="fonts/x-circle.svg" alt="Clear" /></a>
+              <a class="btn btn-default" id="apidocs-help-button" title="Help" href="apidocs-help.html"><img src="fonts/info.svg" alt="Help" /></a>
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="search-results-container" style="display: none;">
+        
+        <div id="search-buttons">
+          <span class="label label-default" id="search-docstrings-button">
+          <label class="checkbox-inline">
+            <input type="checkbox" id="toggle-search-in-docstrings-checkbox" value="false" onclick="toggleSearchInDocstrings()">
+              search in docstrings
+            </input>
+          </label>
+          </span>
+          
+        </div>
+        
+        <noscript>
+            <h1>Cannot search: JavaScript is not supported/enabled in your browser.</h1>
+        </noscript>
+
+        <div id="search-status"> </div>
+
+        <div class="warning" id="search-warn-box" style="display: none;">
+          <p class="rst-last"><span id="search-warn"></span></p>
+        </div>
+
+        <table id="search-results">
+          <!-- Filled dynamically by JS -->
+        </table>
+        
+        <div style="margin-top: 10px;">
+          <p>For more information on the search, visit the <a href="apidocs-help.html#rst-search">help page</a>.</p>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+</nav>
+    
+    <div class="container-fluid">
+
+      <!-- Side navigation -->
+      <div class="sidebarcontainer" style="display: none;">
+        
+        <div class="sidebar"><nav class="sidebar">
+  
+
+  <div>
+
+      <div class="thingTitle">
+        <span>Class</span>
+        <code class="thisobject"><a href="foldify.Point2D.html" class="internal-link" title="This class"><wbr></wbr>Point2<wbr></wbr>D</a></code> 
+      </div>
+      
+      <div>
+        
+
+        
+         
+
+        
+        
+
+        <div class="childrenKindTitle">Methods</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#__add__" class="internal-link" title="foldify.Point2D.__add__">__add__</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#__mul__" class="internal-link" title="foldify.Point2D.__mul__">__mul__</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#__repr__" class="internal-link" title="foldify.Point2D.__repr__">__repr__</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#__sub__" class="internal-link" title="foldify.Point2D.__sub__">__sub__</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#__truediv__" class="internal-link" title="foldify.Point2D.__truediv__">__truediv__</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#cross" class="internal-link" title="foldify.Point2D.cross">cross</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#distance_to" class="internal-link" title="foldify.Point2D.distance_to">distance<wbr></wbr>_to</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#dot" class="internal-link" title="foldify.Point2D.dot">dot</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#is_close" class="internal-link" title="foldify.Point2D.is_close">is<wbr></wbr>_close</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#length" class="internal-link" title="foldify.Point2D.length">length</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#normalized" class="internal-link" title="foldify.Point2D.normalized">normalized</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#perpendicular" class="internal-link" title="foldify.Point2D.perpendicular">perpendicular</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#rotated" class="internal-link" title="foldify.Point2D.rotated">rotated</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+
+        <div class="childrenKindTitle">Attributes</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#x" class="internal-link" title="foldify.Point2D.x">x</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#y" class="internal-link" title="foldify.Point2D.y">y</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+        
+      </div>
+  </div><div>
+
+      <div class="thingTitle">
+        <span>Module</span>
+        <code><a href="index.html" class="internal-link" title="The parent of this class">foldify</a></code> 
+      </div>
+      
+      <div>
+        
+
+        
+         
+
+        <div class="childrenKindTitle">Classes</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.CreasePattern.html" class="internal-link" title="foldify.CreasePattern"><wbr></wbr>Crease<wbr></wbr>Pattern</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.ErrorViewer.html" class="internal-link" title="foldify.ErrorViewer"><wbr></wbr>Error<wbr></wbr>Viewer</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.FaceBuilder.html" class="internal-link" title="foldify.FaceBuilder"><wbr></wbr>Face<wbr></wbr>Builder</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.FoldabilityChecker.html" class="internal-link" title="foldify.FoldabilityChecker"><wbr></wbr>Foldability<wbr></wbr>Checker</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.FoldedModel.html" class="internal-link" title="foldify.FoldedModel"><wbr></wbr>Folded<wbr></wbr>Model</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.FoldedModelBuilder.html" class="internal-link" title="foldify.FoldedModelBuilder"><wbr></wbr>Folded<wbr></wbr>Model<wbr></wbr>Builder</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.Foldify.html" class="internal-link" title="foldify.Foldify"><wbr></wbr>Foldify</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.FoldViewer.html" class="internal-link" title="foldify.FoldViewer"><wbr></wbr>Fold<wbr></wbr>Viewer</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.GeometryUtil.html" class="internal-link" title="foldify.GeometryUtil"><wbr></wbr>Geometry<wbr></wbr>Util</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.LayerRelation.html" class="internal-link" title="foldify.LayerRelation"><wbr></wbr>Layer<wbr></wbr>Relation</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.LineType.html" class="internal-link" title="foldify.LineType"><wbr></wbr>Line<wbr></wbr>Type</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.OriEdge.html" class="internal-link" title="foldify.OriEdge"><wbr></wbr>Ori<wbr></wbr>Edge</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.OriFace.html" class="internal-link" title="foldify.OriFace"><wbr></wbr>Ori<wbr></wbr>Face</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.OrigamiFolder.html" class="internal-link" title="foldify.OrigamiFolder"><wbr></wbr>Origami<wbr></wbr>Folder</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.OriHalfedge.html" class="internal-link" title="foldify.OriHalfedge"><wbr></wbr>Ori<wbr></wbr>Halfedge</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.OriLine.html" class="internal-link" title="foldify.OriLine"><wbr></wbr>Ori<wbr></wbr>Line</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.OriVertex.html" class="internal-link" title="foldify.OriVertex"><wbr></wbr>Ori<wbr></wbr>Vertex</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.PatternViewer.html" class="internal-link" title="foldify.PatternViewer"><wbr></wbr>Pattern<wbr></wbr>Viewer</a></code>
+            </div>
+        
+
+    </li><li class=" thisobject">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D"><wbr></wbr>Point2<wbr></wbr>D</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.StackingAnalyzer.html" class="internal-link" title="foldify.StackingAnalyzer"><wbr></wbr>Stacking<wbr></wbr>Analyzer</a></code>
+            </div>
+        
+
+    </li>
+</ul>
+
+        <div class="childrenKindTitle">Functions</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#line_intersection_rel" class="internal-link" title="foldify.line_intersection_rel">line<wbr></wbr>_intersection<wbr></wbr>_rel</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#point_to_line_distance" class="internal-link" title="foldify.point_to_line_distance">point<wbr></wbr>_to<wbr></wbr>_line<wbr></wbr>_distance</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#reflect_point_over_line" class="internal-link" title="foldify.reflect_point_over_line">reflect<wbr></wbr>_point<wbr></wbr>_over<wbr></wbr>_line</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#triangle_incenter" class="internal-link" title="foldify.triangle_incenter">triangle<wbr></wbr>_incenter</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#_merge_close_points" class="internal-link" title="foldify._merge_close_points">_merge<wbr></wbr>_close<wbr></wbr>_points</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+
+        <div class="childrenKindTitle">Variables</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#EPS" class="internal-link" title="foldify.EPS">EPS</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#EPS_AREA" class="internal-link" title="foldify.EPS_AREA">EPS<wbr></wbr>_AREA</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+        
+      </div>
+  </div>
+
+</nav>
+        </div>
+        <div id="collapse-sidebar">
+          <a class="btn btn-link" onclick="toggleSideBarCollapse()" title="Toggle Sidebar Collapse">
+          </a>
+        </div> 
+        <script src="sidebartoggle.js" type="text/javascript"></script>
+       
+      </div>
+
+      <main class="">
+        
+
+        
+
+        <div class="page-header">
+          <h1 class="class"><code><code><a href="index.html" class="internal-link">foldify</a></code><wbr></wbr>.<code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code></code></h1>
+          <div id="show-private">
+            <button class="btn btn-link" onclick="togglePrivate()">Toggle Private API</button>
+          </div>
+        </div>
+
+        <div class="categoryHeader">
+          class documentation
+        </div>
+
+        <div class="extrasDocstring">
+          <p class="class-signature"><code><span class="py-keyword">class</span> <span class="py-defname">Point2D</span>:</code></p><p><a href="classIndex.html#foldify.Point2D">View In Hierarchy</a></p>
+        </div>
+
+        <div class="moduleDocstring">
+          <div><p>Двумерная точка с поддержкой векторных операций.</p>
+<dl class="rst-docutils">
+<dt>Attributes:</dt>
+<dd>x (float): Координата X.
+y (float): Координата Y.</dd>
+</dl>
+</div>
+        </div>
+
+        <div id="split-tables">
+          <table class="children sortable" id="id4">
+  
+  
+  <tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#__add__" class="internal-link" title="foldify.Point2D.__add__">__add__</a></code></td>
+    <td>Сложить две точки (как векторы).</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#__mul__" class="internal-link" title="foldify.Point2D.__mul__">__mul__</a></code></td>
+    <td>Умножить точку на скаляр.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#__repr__" class="internal-link" title="foldify.Point2D.__repr__">__repr__</a></code></td>
+    <td>Возвращает строковое представление точки.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#__sub__" class="internal-link" title="foldify.Point2D.__sub__">__sub__</a></code></td>
+    <td>Вычесть одну точку из другой (как векторы).</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#__truediv__" class="internal-link" title="foldify.Point2D.__truediv__">__truediv__</a></code></td>
+    <td>Разделить координаты точки на скаляр.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#cross" class="internal-link" title="foldify.Point2D.cross">cross</a></code></td>
+    <td>Вычислить векторное произведение (Z-компонента) в 2D.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#distance_to" class="internal-link" title="foldify.Point2D.distance_to">distance<wbr></wbr>_to</a></code></td>
+    <td>Вычислить расстояние до другой точки.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#dot" class="internal-link" title="foldify.Point2D.dot">dot</a></code></td>
+    <td>Вычисляет скалярное произведение двух векторов.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#is_close" class="internal-link" title="foldify.Point2D.is_close">is<wbr></wbr>_close</a></code></td>
+    <td>Проверить, находится ли точка близко к другой точке.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#length" class="internal-link" title="foldify.Point2D.length">length</a></code></td>
+    <td>Вычислить длину вектора от начала координат до точки.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#normalized" class="internal-link" title="foldify.Point2D.normalized">normalized</a></code></td>
+    <td>Получить нормализованный вектор (единичный вектор).</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#perpendicular" class="internal-link" title="foldify.Point2D.perpendicular">perpendicular</a></code></td>
+    <td>Получить перпендикулярный вектор (повёрнут на 90 градусов).</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#rotated" class="internal-link" title="foldify.Point2D.rotated">rotated</a></code></td>
+    <td>Получить вектор, повёрнутый на заданный угол.</td>
+  </tr><tr class="classvariable">
+    
+    <td>Class Variable</td>
+    <td><code><a href="#x" class="internal-link" title="foldify.Point2D.x">x</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="classvariable">
+    
+    <td>Class Variable</td>
+    <td><code><a href="#y" class="internal-link" title="foldify.Point2D.y">y</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr>
+</table>
+          
+
+            
+        </div>
+
+        <div id="child-list">
+          <div class="basemethod">
+  
+  
+  <a name="foldify.Point2D.__add__">
+    
+  </a>
+  <a name="__add__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">__add__</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">other: <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code></span>) -&gt; <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code>:</span>
+    
+    <a class="headerLink" href="#__add__" title="foldify.Point2D.__add__">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Сложить две точки (как векторы).</p>
+<dl class="rst-docutils">
+<dt>Args:</dt>
+<dd>other (Point2D): Вторая точка.</dd>
+<dt>Returns:</dt>
+<dd>Point2D: Результирующая точка.</dd>
+</dl>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.Point2D.__mul__">
+    
+  </a>
+  <a name="__mul__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">__mul__</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">scalar: <code>float</code></span>) -&gt; <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code>:</span>
+    
+    <a class="headerLink" href="#__mul__" title="foldify.Point2D.__mul__">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Умножить точку на скаляр.</p>
+<dl class="rst-docutils">
+<dt>Args:</dt>
+<dd>scalar (float): Множитель.</dd>
+<dt>Returns:</dt>
+<dd>Point2D: Результирующая точка.</dd>
+</dl>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.Point2D.__repr__">
+    
+  </a>
+  <a name="__repr__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">__repr__</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>) -&gt; <code>str</code>:</span>
+    
+    <a class="headerLink" href="#__repr__" title="foldify.Point2D.__repr__">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Возвращает строковое представление точки.</p>
+<dl class="rst-docutils">
+<dt>Returns:</dt>
+<dd>Строка вида "P(x.xxxxxx, y.xxxxxx)".</dd>
+</dl>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.Point2D.__sub__">
+    
+  </a>
+  <a name="__sub__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">__sub__</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">other: <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code></span>) -&gt; <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code>:</span>
+    
+    <a class="headerLink" href="#__sub__" title="foldify.Point2D.__sub__">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Вычесть одну точку из другой (как векторы).</p>
+<dl class="rst-docutils">
+<dt>Args:</dt>
+<dd>other (Point2D): Вторая точка.</dd>
+<dt>Returns:</dt>
+<dd>Point2D: Результирующая точка.</dd>
+</dl>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.Point2D.__truediv__">
+    
+  </a>
+  <a name="__truediv__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">__truediv__</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">scalar: <code>float</code></span>) -&gt; <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code>:</span>
+    
+    <a class="headerLink" href="#__truediv__" title="foldify.Point2D.__truediv__">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Разделить координаты точки на скаляр.</p>
+<dl class="rst-docutils">
+<dt>Args:</dt>
+<dd>scalar (float): Делитель.</dd>
+<dt>Returns:</dt>
+<dd>Point2D: Результирующая точка.</dd>
+</dl>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.Point2D.cross">
+    
+  </a>
+  <a name="cross">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">cross</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">other: <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code></span>) -&gt; <code>float</code>:</span>
+    
+    <a class="headerLink" href="#cross" title="foldify.Point2D.cross">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Вычислить векторное произведение (Z-компонента) в 2D.</p>
+<dl class="rst-docutils">
+<dt>Args:</dt>
+<dd>other (Point2D): Другой вектор.</dd>
+<dt>Returns:</dt>
+<dd>float: Z-компонента векторного произведения.</dd>
+</dl>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.Point2D.distance_to">
+    
+  </a>
+  <a name="distance_to">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">distance_to</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">other: <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code></span>) -&gt; <code>float</code>:</span>
+    
+    <a class="headerLink" href="#distance_to" title="foldify.Point2D.distance_to">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Вычислить расстояние до другой точки.</p>
+<dl class="rst-docutils">
+<dt>Args:</dt>
+<dd>other (Point2D): Другая точка.</dd>
+<dt>Returns:</dt>
+<dd>float: Расстояние между точками.</dd>
+</dl>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.Point2D.dot">
+    
+  </a>
+  <a name="dot">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">dot</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">other: <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code></span>) -&gt; <code>float</code>:</span>
+    
+    <a class="headerLink" href="#dot" title="foldify.Point2D.dot">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Вычисляет скалярное произведение двух векторов.</p>
+<dl class="rst-docutils">
+<dt>Args:</dt>
+<dd>other: Другой вектор.</dd>
+<dt>Returns:</dt>
+<dd>Скалярное произведение (float).</dd>
+</dl>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.Point2D.is_close">
+    
+  </a>
+  <a name="is_close">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">is_close</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">other: <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code>, </span><span class="rst-sig-param">tol: <code>float</code> = 1e-10</span>) -&gt; <code>bool</code>:</span>
+    
+    <a class="headerLink" href="#is_close" title="foldify.Point2D.is_close">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Проверить, находится ли точка близко к другой точке.</p>
+<dl class="rst-docutils">
+<dt>Args:</dt>
+<dd>other (Point2D): Другая точка.
+tol (float): Допуск расстояния. По умолчанию 1e-10.</dd>
+<dt>Returns:</dt>
+<dd>bool: True, если расстояние меньше допуска, иначе False.</dd>
+</dl>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.Point2D.length">
+    
+  </a>
+  <a name="length">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">length</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>) -&gt; <code>float</code>:</span>
+    
+    <a class="headerLink" href="#length" title="foldify.Point2D.length">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Вычислить длину вектора от начала координат до точки.</p>
+<dl class="rst-docutils">
+<dt>Returns:</dt>
+<dd>float: Длина вектора.</dd>
+</dl>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.Point2D.normalized">
+    
+  </a>
+  <a name="normalized">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">normalized</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>) -&gt; <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code>:</span>
+    
+    <a class="headerLink" href="#normalized" title="foldify.Point2D.normalized">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Получить нормализованный вектор (единичный вектор).</p>
+<dl class="rst-docutils">
+<dt>Returns:</dt>
+<dd>Point2D: Нормализованный вектор или нулевой вектор, если длина близка к нулю.</dd>
+</dl>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.Point2D.perpendicular">
+    
+  </a>
+  <a name="perpendicular">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">perpendicular</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>) -&gt; <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code>:</span>
+    
+    <a class="headerLink" href="#perpendicular" title="foldify.Point2D.perpendicular">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Получить перпендикулярный вектор (повёрнут на 90 градусов).</p>
+<dl class="rst-docutils">
+<dt>Returns:</dt>
+<dd>Point2D: Перпендикулярный вектор.</dd>
+</dl>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.Point2D.rotated">
+    
+  </a>
+  <a name="rotated">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">rotated</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">angle_rad: <code>float</code></span>) -&gt; <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code>:</span>
+    
+    <a class="headerLink" href="#rotated" title="foldify.Point2D.rotated">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Получить вектор, повёрнутый на заданный угол.</p>
+<dl class="rst-docutils">
+<dt>Args:</dt>
+<dd>angle_rad (float): Угол поворота в радианах.</dd>
+<dt>Returns:</dt>
+<dd>Point2D: Повёрнутый вектор.</dd>
+</dl>
+</div>
+  </div>
+</div><div class="baseclassvariable">
+  
+  
+  <a name="foldify.Point2D.x">
+    
+  </a>
+  <a name="x">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">x</span>: <code>float</code> =
+    
+    <a class="headerLink" href="#x" title="foldify.Point2D.x">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseclassvariable">
+  
+  
+  <a name="foldify.Point2D.y">
+    
+  </a>
+  <a name="y">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">y</span>: <code>float</code> =
+    
+    <a class="headerLink" href="#y" title="foldify.Point2D.y">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div>
+        </div>
+      
+      </main>
+    </div>
+
+    <footer class="navbar navbar-default">
+
+  
+  <div class="container-fluid">
+    <a href="index.html">API Documentation</a> for foldify,
+  generated by <a href="https://github.com/twisted/pydoctor/">pydoctor</a>
+    25.10.1 at 2025-12-16 02:49:43.
+  </div>
+
+  <!-- Search related scripts needs to be loaded at the end of HTML 
+    parsing not to introduce overhead and display HTML data asap -->
+  <script src="ajax.js" type="text/javascript"></script>
+  <script src="searchlib.js" type="text/javascript"></script>
+  <script src="search.js" type="text/javascript"></script>
+
+</footer>
+  
+    <script src="pydoctor.js" type="text/javascript"></script>
+
+  </body>
+</html>

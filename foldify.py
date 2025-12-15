@@ -13,6 +13,7 @@ import itertools
 EPS = 1e-10
 EPS_AREA = 1e-8
 
+
 def line_intersection_rel(line1, line2):
     """
     Найти точку пересечения двух линий, проверяя, находится ли пересечение
@@ -39,6 +40,7 @@ def line_intersection_rel(line1, line2):
         return (round(ix, 12), round(iy, 12))
     return None
 
+
 def point_to_line_distance(p, a, b):
     """
     Вычислить минимальное расстояние от точки до линейного отрезка.
@@ -62,6 +64,7 @@ def point_to_line_distance(p, a, b):
     proj_x = ax + t * dx
     proj_y = ay + t * dy
     return math.hypot(px - proj_x, py - proj_y)
+
 
 def triangle_incenter(a, b, c):
     """
@@ -88,6 +91,7 @@ def triangle_incenter(a, b, c):
     iy = (ab * cy + bc * ay + ca * by) / total
     return (ix, iy)
 
+
 def reflect_point_over_line(p, a, b):
     """
     Отразить точку относительно линии.
@@ -113,6 +117,7 @@ def reflect_point_over_line(p, a, b):
     ry = 2 * proj_y - py
     return (rx, ry)
 
+
 def _merge_close_points(points: List[Point2D]) -> List[Point2D]:
     """
     Объединить точки, находящиеся близко друг к другу (в пределах EPS).
@@ -129,6 +134,7 @@ def _merge_close_points(points: List[Point2D]) -> List[Point2D]:
             merged.append(p)
     return merged
 
+
 class LineType(Enum):
     """Перечисление типов линий в оригами паттерне.
 
@@ -139,11 +145,13 @@ class LineType(Enum):
         CUT: Линия квадрата.
         NONE: Отсутствие типа.
     """
+
     MOUNTAIN = 1
     VALLEY = 2
     AUX = 3
     CUT = 4
     NONE = 0
+
 
 class LayerRelation(IntEnum):
     """
@@ -154,9 +162,11 @@ class LayerRelation(IntEnum):
         BELOW (int): Один слой находится под другим.
         UNKNOWN (int): неопределенное состояние
     """
+
     ABOVE = 1
     BELOW = -1
     UNKNOWN = 0
+
 
 @dataclass(frozen=True, eq=True)
 class Point2D:
@@ -167,10 +177,11 @@ class Point2D:
         x (float): Координата X.
         y (float): Координата Y.
     """
+
     x: float
     y: float
 
-    def __add__(self, other: 'Point2D') -> 'Point2D':
+    def __add__(self, other: "Point2D") -> "Point2D":
         """
         Сложить две точки (как векторы).
 
@@ -182,7 +193,7 @@ class Point2D:
         """
         return Point2D(self.x + other.x, self.y + other.y)
 
-    def __sub__(self, other: 'Point2D') -> 'Point2D':
+    def __sub__(self, other: "Point2D") -> "Point2D":
         """
         Вычесть одну точку из другой (как векторы).
 
@@ -194,7 +205,7 @@ class Point2D:
         """
         return Point2D(self.x - other.x, self.y - other.y)
 
-    def __mul__(self, scalar: float) -> 'Point2D':
+    def __mul__(self, scalar: float) -> "Point2D":
         """
         Умножить точку на скаляр.
 
@@ -206,7 +217,7 @@ class Point2D:
         """
         return Point2D(self.x * scalar, self.y * scalar)
 
-    def __truediv__(self, scalar: float) -> 'Point2D':
+    def __truediv__(self, scalar: float) -> "Point2D":
         """
         Разделить координаты точки на скаляр.
 
@@ -226,7 +237,6 @@ class Point2D:
         """
         return f"P({self.x:.6f}, {self.y:.6f})"
 
-
     def length(self) -> float:
         """
         Вычислить длину вектора от начала координат до точки.
@@ -236,7 +246,7 @@ class Point2D:
         """
         return math.hypot(self.x, self.y)
 
-    def distance_to(self, other: 'Point2D') -> float:
+    def distance_to(self, other: "Point2D") -> float:
         """
         Вычислить расстояние до другой точки.
 
@@ -248,7 +258,7 @@ class Point2D:
         """
         return (self - other).length()
 
-    def normalized(self) -> 'Point2D':
+    def normalized(self) -> "Point2D":
         """
         Получить нормализованный вектор (единичный вектор).
 
@@ -261,7 +271,7 @@ class Point2D:
             return Point2D(0, 0)
         return self / l
 
-    def dot(self, other: 'Point2D') -> float:
+    def dot(self, other: "Point2D") -> float:
         """Вычисляет скалярное произведение двух векторов.
 
         Args:
@@ -272,7 +282,7 @@ class Point2D:
         """
         return self.x * other.x + self.y * other.y
 
-    def cross(self, other: 'Point2D') -> float:
+    def cross(self, other: "Point2D") -> float:
         """
         Вычислить векторное произведение (Z-компонента) в 2D.
 
@@ -284,7 +294,7 @@ class Point2D:
         """
         return self.x * other.y - self.y * other.x
 
-    def perpendicular(self) -> 'Point2D':
+    def perpendicular(self) -> "Point2D":
         """
         Получить перпендикулярный вектор (повёрнут на 90 градусов).
 
@@ -293,7 +303,7 @@ class Point2D:
         """
         return Point2D(-self.y, self.x)
 
-    def rotated(self, angle_rad: float) -> 'Point2D':
+    def rotated(self, angle_rad: float) -> "Point2D":
         """
         Получить вектор, повёрнутый на заданный угол.
 
@@ -307,7 +317,7 @@ class Point2D:
         s = math.sin(angle_rad)
         return Point2D(self.x * c - self.y * s, self.x * s + self.y * c)
 
-    def is_close(self, other: 'Point2D', tol: float = 1e-10) -> bool:
+    def is_close(self, other: "Point2D", tol: float = 1e-10) -> bool:
         """
         Проверить, находится ли точка близко к другой точке.
 
@@ -320,6 +330,7 @@ class Point2D:
         """
         return self.distance_to(other) < tol
 
+
 @dataclass
 class OriLine:
     """
@@ -330,6 +341,7 @@ class OriLine:
         p1 (Point2D): Конечная точка.
         type (LineType): Тип линии (гора, долина, вспомогательная и т.д.).
     """
+
     p0: Point2D
     p1: Point2D
     type: LineType = LineType.AUX
@@ -340,7 +352,9 @@ class OriLine:
         Returns:
             Строка вида "[T] точка1 — точка2", где T - первая буква типа.
         """
-        t = {LineType.MOUNTAIN: "M", LineType.VALLEY: "V", LineType.AUX: "A"}.get(self.type, "?")
+        t = {LineType.MOUNTAIN: "M", LineType.VALLEY: "V", LineType.AUX: "A"}.get(
+            self.type, "?"
+        )
         return f"[{t}] {self.p0} — {self.p1}"
 
     def __post_init__(self):
@@ -380,7 +394,7 @@ class OriLine:
         """
         return (self.p0 + self.p1) * 0.5
 
-    def reversed(self) -> 'OriLine':
+    def reversed(self) -> "OriLine":
         """
         Получить линию с обратным направлением.
 
@@ -416,6 +430,7 @@ class OriLine:
         """
         return self.type in (LineType.MOUNTAIN, LineType.VALLEY)
 
+
 @dataclass
 class OriVertex:
     """
@@ -426,9 +441,10 @@ class OriVertex:
         edges (list): Список рёбер, выходящих из этой вершины.
         pre_edges (list): Временный список для построения графа.
     """
+
     p: Point2D
-    edges: List['OriEdge'] = field(default_factory=list, repr=False)
-    pre_edges: List['OriEdge'] = field(default_factory=list, repr=False)
+    edges: List["OriEdge"] = field(default_factory=list, repr=False)
+    pre_edges: List["OriEdge"] = field(default_factory=list, repr=False)
 
     def __hash__(self):
         """Возвращает хеш вершины на основе координат.
@@ -462,7 +478,7 @@ class OriVertex:
         self.edges = []
         self.pre_edges = []
 
-    def add_edge(self, edge: 'OriEdge'):
+    def add_edge(self, edge: "OriEdge"):
         """
         Добавить ребро к вершине.
 
@@ -481,6 +497,7 @@ class OriVertex:
         """
         return len(self.edges)
 
+
 @dataclass
 class OriEdge:
     """
@@ -495,13 +512,14 @@ class OriEdge:
         left_face (OriFace): Грань слева от ребра.
         right_face (OriFace): Грань справа от ребра.
     """
+
     sv: OriVertex
     ev: OriVertex
     line: OriLine
     type: LineType = LineType.AUX
-    opposite: Optional['OriEdge'] = None
-    left_face: Optional['OriFace'] = None
-    right_face: Optional['OriFace'] = None
+    opposite: Optional["OriEdge"] = None
+    left_face: Optional["OriFace"] = None
+    right_face: Optional["OriFace"] = None
 
     def __eq__(self, other):
         """Проверяет равенство рёбер по идентификатору объекта.
@@ -545,6 +563,7 @@ class OriEdge:
         """
         return self.type in (LineType.MOUNTAIN, LineType.VALLEY)
 
+
 @dataclass
 class OriHalfedge:
     """
@@ -558,12 +577,13 @@ class OriHalfedge:
         prev (OriHalfedge): Предыдущее полурёбро в цикле грани.
         opposite (OriHalfedge): Противоположное полурёбро.
     """
+
     edge: OriEdge
-    face: Optional['OriFace'] = None
+    face: Optional["OriFace"] = None
     vertex: OriVertex = None
-    next: Optional['OriHalfedge'] = None
-    prev: Optional['OriHalfedge'] = None
-    opposite: Optional['OriHalfedge'] = None
+    next: Optional["OriHalfedge"] = None
+    prev: Optional["OriHalfedge"] = None
+    opposite: Optional["OriHalfedge"] = None
 
     def __repr__(self):
         """Возвращает строковое представление полуребра.
@@ -592,6 +612,7 @@ class OriHalfedge:
         """
         return self.edge.ev.p - self.edge.sv.p
 
+
 @dataclass
 class OriFace:
     """
@@ -603,6 +624,7 @@ class OriFace:
         z_order (int): Порядок глубины для отображения.
         outline (list): Список точек контура грани.
     """
+
     halfedges: List[OriHalfedge] = field(default_factory=list)
     is_ccw: bool = True
     z_order: int = 0
@@ -677,6 +699,7 @@ class OriFace:
         cx = sum(p.x for p in self.outline) / len(self.outline)
         cy = sum(p.y for p in self.outline) / len(self.outline)
         return Point2D(cx, cy)
+
 
 class CreasePattern:
     """
@@ -753,7 +776,7 @@ class CreasePattern:
             points.add(line.p1)
 
         for i, l1 in enumerate(lines):
-            for l2 in lines[i + 1:]:
+            for l2 in lines[i + 1 :]:
                 inter = self._line_line_intersection(l1, l2)
                 if inter:
                     points.add(inter)
@@ -799,7 +822,7 @@ class CreasePattern:
             points.add(line.p1)
 
         for i, l1 in enumerate(lines):
-            for l2 in lines[i + 1:]:
+            for l2 in lines[i + 1 :]:
                 inter = self._line_line_intersection(l1, l2)
                 if inter:
                     points.add(inter)
@@ -832,7 +855,9 @@ class CreasePattern:
         foot = line.p0 + vec * proj
         return p.is_close(foot, EPS)
 
-    def _split_line_at_points(self, line: OriLine, points_on_line: List[Point2D]) -> List[OriLine]:
+    def _split_line_at_points(
+        self, line: OriLine, points_on_line: List[Point2D]
+    ) -> List[OriLine]:
         """
         Разделить линию на отрезки в точках пересечения.
 
@@ -888,7 +913,9 @@ class CreasePattern:
 
         split_segments: List[OriLine] = []
         for line in self._all_lines_for_graph():
-            points_on_line = [p for p in all_points if self._is_point_on_segment(p, line)]
+            points_on_line = [
+                p for p in all_points if self._is_point_on_segment(p, line)
+            ]
             segments = self._split_line_at_points(line, points_on_line)
             split_segments.extend(segments)
 
@@ -928,6 +955,7 @@ class CreasePattern:
         """
         half = self.paper_size / 2.0
         return -half - EPS <= p.x <= half + EPS and -half - EPS <= p.y <= half + EPS
+
 
 class FaceBuilder:
     """
@@ -973,7 +1001,9 @@ class FaceBuilder:
             while True:
                 halfedges.append(he)
                 mark_used(he.edge)
-                candidates: List[OriEdge] = [e for e in he.vertex.edges if not is_used(e)]
+                candidates: List[OriEdge] = [
+                    e for e in he.vertex.edges if not is_used(e)
+                ]
                 if not candidates:
                     break
 
@@ -982,10 +1012,13 @@ class FaceBuilder:
                 best_angle = -10.0
 
                 for candidate in candidates:
-                    outgoing_dir = candidate.ev.p - candidate.sv.p if candidate.sv == he.vertex else candidate.sv.p - candidate.ev.p
+                    outgoing_dir = (
+                        candidate.ev.p - candidate.sv.p
+                        if candidate.sv == he.vertex
+                        else candidate.sv.p - candidate.ev.p
+                    )
                     angle = math.atan2(
-                        incoming_dir.cross(outgoing_dir),
-                        incoming_dir.dot(outgoing_dir)
+                        incoming_dir.cross(outgoing_dir), incoming_dir.dot(outgoing_dir)
                     )
 
                     if angle > best_angle:
@@ -995,11 +1028,11 @@ class FaceBuilder:
                 if best_edge is None:
                     break
 
-                next_vertex = best_edge.ev if best_edge.sv == he.vertex else best_edge.sv
+                next_vertex = (
+                    best_edge.ev if best_edge.sv == he.vertex else best_edge.sv
+                )
                 he = OriHalfedge(
-                    edge=best_edge,
-                    face=None,  # заполним позже
-                    vertex=next_vertex
+                    edge=best_edge, face=None, vertex=next_vertex  # заполним позже
                 )
 
                 if he.edge == start_edge and len(halfedges) > 2:
@@ -1020,16 +1053,22 @@ class FaceBuilder:
 
             face = OriFace(halfedges=[], is_ccw=is_ccw)
             for i, he in enumerate(halfedges):
-                correct_edge = he.edge if (he.edge.sv == he.vertex) == (not is_ccw) else he.edge.opposite
+                correct_edge = (
+                    he.edge
+                    if (he.edge.sv == he.vertex) == (not is_ccw)
+                    else he.edge.opposite
+                )
                 if correct_edge is None:
                     continue
 
-                correct_next_vertex = correct_edge.ev if correct_edge.sv.p.is_close(he.vertex.p) else correct_edge.sv
+                correct_next_vertex = (
+                    correct_edge.ev
+                    if correct_edge.sv.p.is_close(he.vertex.p)
+                    else correct_edge.sv
+                )
 
                 proper_he = OriHalfedge(
-                    edge=correct_edge,
-                    face=face,
-                    vertex=correct_next_vertex
+                    edge=correct_edge, face=face, vertex=correct_next_vertex
                 )
                 face.halfedges.append(proper_he)
 
@@ -1039,8 +1078,14 @@ class FaceBuilder:
 
             for he in face.halfedges:
                 if he.opposite is None and he.edge.opposite:
-                    opp_vertex = he.edge.opposite.ev if he.edge.opposite.sv == he.vertex else he.edge.opposite.sv
-                    he.opposite = OriHalfedge(edge=he.edge.opposite, face=None, vertex=opp_vertex)
+                    opp_vertex = (
+                        he.edge.opposite.ev
+                        if he.edge.opposite.sv == he.vertex
+                        else he.edge.opposite.sv
+                    )
+                    he.opposite = OriHalfedge(
+                        edge=he.edge.opposite, face=None, vertex=opp_vertex
+                    )
                     he.opposite.opposite = he
 
             face.build_outline()
@@ -1056,11 +1101,7 @@ class FaceBuilder:
             for start_dir in [edge, edge.opposite]:
                 if is_used(start_dir):
                     continue
-                he = OriHalfedge(
-                    edge=start_dir,
-                    face=None,
-                    vertex=start_dir.ev
-                )
+                he = OriHalfedge(edge=start_dir, face=None, vertex=start_dir.ev)
                 face = follow_leftmost_turn(he)
                 if face:
                     for he in face.halfedges:
@@ -1079,6 +1120,7 @@ class FaceBuilder:
 
         return unique_faces
 
+
 class FoldabilityChecker:
     """
     Класс для проверки возможности складывания паттерна складок.
@@ -1086,8 +1128,11 @@ class FoldabilityChecker:
     Проверяет корректность паттерна складок согласно правилам оригами,
     включая проверку углов и условия Маекавы и Кавасаки.
     """
+
     @staticmethod
-    def check_local_flat_foldability(cp: CreasePattern, faces: List[OriFace]) -> List[str]:
+    def check_local_flat_foldability(
+        cp: CreasePattern, faces: List[OriFace]
+    ) -> List[str]:
         """
         Проверить локальную возможность плоского складывания в каждой вершине.
 
@@ -1126,7 +1171,11 @@ class FoldabilityChecker:
 
             unique_rays = []
             for typ, ang in rays:
-                if not unique_rays or abs((ang - unique_rays[-1][1] + math.pi * 2) % (math.pi * 2)) > 1e-8:
+                if (
+                    not unique_rays
+                    or abs((ang - unique_rays[-1][1] + math.pi * 2) % (math.pi * 2))
+                    > 1e-8
+                ):
                     unique_rays.append((typ, ang))
 
             if len(unique_rays) < 2:
@@ -1140,7 +1189,9 @@ class FoldabilityChecker:
             m_count = sum(1 for t, _ in unique_rays if t == LineType.MOUNTAIN)
             v_count = sum(1 for t, _ in unique_rays if t == LineType.VALLEY)
             if abs(m_count - v_count) != 2:
-                errors.append(f"Вершина {vertex.p}: Maekawa нарушено |M-V| = {abs(m_count - v_count)}")
+                errors.append(
+                    f"Вершина {vertex.p}: Maekawa нарушено |M-V| = {abs(m_count - v_count)}"
+                )
 
             angles = []
             for i in range(n):
@@ -1155,9 +1206,13 @@ class FoldabilityChecker:
             sum_odd = sum(angles[i] for i in range(1, n, 2))
 
             if abs(math.degrees(sum_even) - 180.0) > 2.0:
-                errors.append(f"Вершина {vertex.p}: Kawasaki (чётные): {math.degrees(sum_even):.1f}° ≈ 180°")
+                errors.append(
+                    f"Вершина {vertex.p}: Kawasaki (чётные): {math.degrees(sum_even):.1f}° ≈ 180°"
+                )
             if abs(math.degrees(sum_odd) - 180.0) > 2.0:
-                errors.append(f"Вершина {vertex.p}: Kawasaki (нечётные): {math.degrees(sum_odd):.1f}° ≈ 180°")
+                errors.append(
+                    f"Вершина {vertex.p}: Kawasaki (нечётные): {math.degrees(sum_odd):.1f}° ≈ 180°"
+                )
 
         return errors
 
@@ -1179,7 +1234,9 @@ class FoldabilityChecker:
         return []
 
     @staticmethod
-    def full_foldability_check(cp: CreasePattern, faces: List[OriFace]) -> Dict[str, Any]:
+    def full_foldability_check(
+        cp: CreasePattern, faces: List[OriFace]
+    ) -> Dict[str, Any]:
         """
         Выполнить полную проверку складываемости паттерна.
 
@@ -1202,8 +1259,9 @@ class FoldabilityChecker:
             "foldable": len(local_errors) == 0,
             "errors": local_errors,
             "face_count": len(faces),
-            "vertex_count": len(cp.vertices)
+            "vertex_count": len(cp.vertices),
         }
+
 
 class FoldedModel:
     """
@@ -1214,6 +1272,7 @@ class FoldedModel:
         overlaps_resolved (bool): Флаг, указывающий, был ли разрешен порядок наложения слоёв.
         error (str): Сообщение об ошибке, если порядок слоёв не может быть разрешен.
     """
+
     def __init__(self):
         """
         Инициализировать пустую модель сложенного оригами.
@@ -1222,6 +1281,7 @@ class FoldedModel:
         self.overlaps_resolved = False
         self.error: Optional[str] = None
 
+
 class StackingAnalyzer:
     """
     Класс для анализа и определения порядка наложения слоёв при складывании.
@@ -1229,6 +1289,7 @@ class StackingAnalyzer:
     Использует информацию о типах складок (гора/долина) для определения,
     какие грани находятся выше других после складывания.
     """
+
     @staticmethod
     def estimate_layer_order(cp: CreasePattern, faces: List[OriFace]) -> FoldedModel:
         """
@@ -1298,7 +1359,9 @@ class StackingAnalyzer:
                             relations[k][i] = LayerRelation(-new_rel.value)
                             changed = True
                         elif relations[i][k] != new_rel:
-                            model.error = f"Конфликт порядка слоёв между гранями {i} и {k}"
+                            model.error = (
+                                f"Конфликт порядка слоёв между гранями {i} и {k}"
+                            )
                             return model
 
         z_values = [0] * n
@@ -1352,14 +1415,18 @@ class StackingAnalyzer:
         model.overlaps_resolved = True
         return model
 
+
 class GeometryUtil:
     """
     Утилита для геометрических вычислений и преобразований.
 
     Содержит статические методы для отражения точек и поворота относительно центра.
     """
+
     @staticmethod
-    def reflect_point_over_line(point: Point2D, line_p0: Point2D, line_p1: Point2D) -> Point2D:
+    def reflect_point_over_line(
+        point: Point2D, line_p0: Point2D, line_p1: Point2D
+    ) -> Point2D:
         """
         Отразить точку относительно линии.
 
@@ -1406,6 +1473,7 @@ class GeometryUtil:
             Point2D: Повёрнутая точка.
         """
         return center + (center - point)
+
 
 class FoldedModelBuilder:
     """
@@ -1522,7 +1590,10 @@ class OrigamiFolder:
         """
         faces = FaceBuilder.build_faces(cp)
         if not faces:
-            return {"success": False, "errors": ["Не удалось построить грани (возможно, топология нарушена)"]}
+            return {
+                "success": False,
+                "errors": ["Не удалось построить грани (возможно, топология нарушена)"],
+            }
 
         check_result = FoldabilityChecker.full_foldability_check(cp, faces)
         if not check_result["foldable"]:
@@ -1538,8 +1609,9 @@ class OrigamiFolder:
             "success": True,
             "folded_faces": folded_faces,
             "original_faces": faces,
-            "crease_pattern": cp
+            "crease_pattern": cp,
         }
+
 
 class FoldViewer(wx.Frame):
     """
@@ -1607,6 +1679,7 @@ class FoldViewer(wx.Frame):
 
             dc.DrawPolygon(points)
 
+
 class ErrorViewer(wx.Frame):
     """
     Окно для визуализации паттерна складок с отмеченными проблемными вершинами.
@@ -1629,7 +1702,9 @@ class ErrorViewer(wx.Frame):
             crease_pattern (CreasePattern): Паттерн для отображения.
             problem_vertices (list): Список проблемных вершин (Point2D).
         """
-        super().__init__(parent, title="Проверка складывания - Обнаружены ошибки", size=(800, 800))
+        super().__init__(
+            parent, title="Проверка складывания - Обнаружены ошибки", size=(800, 800)
+        )
         self.crease_pattern = crease_pattern
         self.problem_vertices = problem_vertices
         self.panel = wx.Panel(self)
@@ -1664,10 +1739,7 @@ class ErrorViewer(wx.Frame):
         dc.SetPen(wx.Pen(wx.BLACK, 2))
         dc.SetBrush(wx.Brush(wx.WHITE))
         dc.DrawRectangle(
-            int(cx - scale),
-            int(cy - scale),
-            int(2 * scale),
-            int(2 * scale)
+            int(cx - scale), int(cy - scale), int(2 * scale), int(2 * scale)
         )
 
         for line in self.crease_pattern.lines:
@@ -1683,7 +1755,9 @@ class ErrorViewer(wx.Frame):
             elif line.type == LineType.VALLEY:
                 dc.SetPen(wx.Pen(wx.Colour(0, 0, 255), 2))  # Синий для долин
             else:
-                dc.SetPen(wx.Pen(wx.Colour(180, 180, 180), 1))  # Серый для вспомогательных
+                dc.SetPen(
+                    wx.Pen(wx.Colour(180, 180, 180), 1)
+                )  # Серый для вспомогательных
 
             dc.DrawLine(int(x0), int(y0), int(x1), int(y1))
 
@@ -1701,6 +1775,7 @@ class ErrorViewer(wx.Frame):
             x = cx + problem_point.x * scale
             y = cy - problem_point.y * scale
             dc.DrawCircle(int(x), int(y), 8)
+
 
 class Foldify(wx.Frame):
     """
@@ -1735,6 +1810,7 @@ class Foldify(wx.Frame):
         line_type (str): Тип линии для рисования.
         history (list): История состояний для undo/redo.
     """
+
     MODE_INPUT = "input"
     MODE_DELETE = "delete"
     MODE_ALTER = "alter"
@@ -1748,7 +1824,7 @@ class Foldify(wx.Frame):
     LINE_VALLEY = "valley"
     LINE_AUX = "aux"
 
-    def __init__(self, parent, title, s="icons"):
+    def __init__(self, parent, title, s="src"):
         """
         Инициализировать главное окно приложения.
 
@@ -1758,10 +1834,14 @@ class Foldify(wx.Frame):
         Args:
             parent: Родительское окно.
             title (str): Заголовок окна.
-            s (str): Директория с иконками для кнопок инструментов. По умолчанию "icons".
+            s (str): Директория с иконками для кнопок инструментов. По умолчанию "src".
         """
-        super(Foldify, self).__init__(parent, title=title, size=(900, 650),
-                                      style=wx.DEFAULT_FRAME_STYLE | wx.RESIZE_BORDER)
+        super(Foldify, self).__init__(
+            parent,
+            title=title,
+            size=(900, 650),
+            style=wx.DEFAULT_FRAME_STYLE | wx.RESIZE_BORDER,
+        )
 
         self.div_num = 4
         self.margin = 50
@@ -1801,17 +1881,27 @@ class Foldify(wx.Frame):
         self.control_panel = wx.Panel(self.panel)
         self.control_panel.SetBackgroundColour(wx.Colour(240, 240, 240))
 
-        self.radio_input = wx.RadioButton(self.control_panel, label="Ввод линии", style=wx.RB_GROUP)
+        self.radio_input = wx.RadioButton(
+            self.control_panel, label="Ввод линии", style=wx.RB_GROUP
+        )
         self.radio_delete = wx.RadioButton(self.control_panel, label="Удалить линию")
         self.radio_alter = wx.RadioButton(self.control_panel, label="Изменить тип")
 
-        self.radio_input.Bind(wx.EVT_RADIOBUTTON, lambda e: self.set_main_mode(self.MODE_INPUT))
-        self.radio_delete.Bind(wx.EVT_RADIOBUTTON, lambda e: self.set_main_mode(self.MODE_DELETE))
-        self.radio_alter.Bind(wx.EVT_RADIOBUTTON, lambda e: self.set_main_mode(self.MODE_ALTER))
+        self.radio_input.Bind(
+            wx.EVT_RADIOBUTTON, lambda e: self.set_main_mode(self.MODE_INPUT)
+        )
+        self.radio_delete.Bind(
+            wx.EVT_RADIOBUTTON, lambda e: self.set_main_mode(self.MODE_DELETE)
+        )
+        self.radio_alter.Bind(
+            wx.EVT_RADIOBUTTON, lambda e: self.set_main_mode(self.MODE_ALTER)
+        )
 
         type_panel = wx.Panel(self.control_panel)
         type_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.radio_mountain = wx.RadioButton(type_panel, label="Гора", style=wx.RB_GROUP)
+        self.radio_mountain = wx.RadioButton(
+            type_panel, label="Гора", style=wx.RB_GROUP
+        )
         self.radio_valley = wx.RadioButton(type_panel, label="Долина")
         self.radio_aux = wx.RadioButton(type_panel, label="Вспомогательная")
         self.radio_mountain.SetValue(True)
@@ -1820,39 +1910,69 @@ class Foldify(wx.Frame):
         type_sizer.Add(self.radio_aux, 0, wx.ALL, 3)
         type_panel.SetSizer(type_sizer)
 
-        self.radio_mountain.Bind(wx.EVT_RADIOBUTTON, lambda e: self.set_line_type(self.LINE_MOUNTAIN))
-        self.radio_valley.Bind(wx.EVT_RADIOBUTTON, lambda e: self.set_line_type(self.LINE_VALLEY))
-        self.radio_aux.Bind(wx.EVT_RADIOBUTTON, lambda e: self.set_line_type(self.LINE_AUX))
+        self.radio_mountain.Bind(
+            wx.EVT_RADIOBUTTON, lambda e: self.set_line_type(self.LINE_MOUNTAIN)
+        )
+        self.radio_valley.Bind(
+            wx.EVT_RADIOBUTTON, lambda e: self.set_line_type(self.LINE_VALLEY)
+        )
+        self.radio_aux.Bind(
+            wx.EVT_RADIOBUTTON, lambda e: self.set_line_type(self.LINE_AUX)
+        )
 
         icon_dir = s
         self.icons = {
-            "segment": [self.load_icon(os.path.join(icon_dir, "segment_inactive.png")),
-                        self.load_icon(os.path.join(icon_dir, "segment_active.png"))],
-            "bisector": [self.load_icon(os.path.join(icon_dir, "bisector_inactive.png")),
-                         self.load_icon(os.path.join(icon_dir, "bisector_active.png"))],
-            "incenter": [self.load_icon(os.path.join(icon_dir, "incenter_inactive.png")),
-                         self.load_icon(os.path.join(icon_dir, "incenter_active.png"))],
-            "perp": [self.load_icon(os.path.join(icon_dir, "perp_inactive.png")),
-                     self.load_icon(os.path.join(icon_dir, "perp_active.png"))]
+            "segment": [
+                self.load_icon(os.path.join(icon_dir, "segment_inactive.png")),
+                self.load_icon(os.path.join(icon_dir, "segment_active.png")),
+            ],
+            "bisector": [
+                self.load_icon(os.path.join(icon_dir, "bisector_inactive.png")),
+                self.load_icon(os.path.join(icon_dir, "bisector_active.png")),
+            ],
+            "incenter": [
+                self.load_icon(os.path.join(icon_dir, "incenter_inactive.png")),
+                self.load_icon(os.path.join(icon_dir, "incenter_active.png")),
+            ],
+            "perp": [
+                self.load_icon(os.path.join(icon_dir, "perp_inactive.png")),
+                self.load_icon(os.path.join(icon_dir, "perp_active.png")),
+            ],
         }
 
-        self.btn_segment = wx.BitmapButton(self.control_panel, bitmap=self.icons["segment"][1], size=(32, 32))
-        self.btn_bisector = wx.BitmapButton(self.control_panel, bitmap=self.icons["bisector"][0], size=(32, 32))
-        self.btn_incenter = wx.BitmapButton(self.control_panel, bitmap=self.icons["incenter"][0], size=(32, 32))
-        self.btn_perp = wx.BitmapButton(self.control_panel, bitmap=self.icons["perp"][0], size=(32, 32))
+        self.btn_segment = wx.BitmapButton(
+            self.control_panel, bitmap=self.icons["segment"][1], size=(32, 32)
+        )
+        self.btn_bisector = wx.BitmapButton(
+            self.control_panel, bitmap=self.icons["bisector"][0], size=(32, 32)
+        )
+        self.btn_incenter = wx.BitmapButton(
+            self.control_panel, bitmap=self.icons["incenter"][0], size=(32, 32)
+        )
+        self.btn_perp = wx.BitmapButton(
+            self.control_panel, bitmap=self.icons["perp"][0], size=(32, 32)
+        )
 
         self.btn_segment.SetToolTip("Отрезок")
         self.btn_bisector.SetToolTip("Биссектриса")
         self.btn_incenter.SetToolTip("Центр вписанной окружности")
         self.btn_perp.SetToolTip("Перпендикуляр")
 
-        self.btn_segment.Bind(wx.EVT_BUTTON, lambda e: self.set_submode(self.SUBMODE_SEGMENT))
-        self.btn_bisector.Bind(wx.EVT_BUTTON, lambda e: self.set_submode(self.SUBMODE_BISECTOR))
-        self.btn_incenter.Bind(wx.EVT_BUTTON, lambda e: self.set_submode(self.SUBMODE_INCENTER))
+        self.btn_segment.Bind(
+            wx.EVT_BUTTON, lambda e: self.set_submode(self.SUBMODE_SEGMENT)
+        )
+        self.btn_bisector.Bind(
+            wx.EVT_BUTTON, lambda e: self.set_submode(self.SUBMODE_BISECTOR)
+        )
+        self.btn_incenter.Bind(
+            wx.EVT_BUTTON, lambda e: self.set_submode(self.SUBMODE_INCENTER)
+        )
         self.btn_perp.Bind(wx.EVT_BUTTON, lambda e: self.set_submode(self.SUBMODE_PERP))
 
         self.div_label = wx.StaticText(self.control_panel, label="Делений")
-        self.div_text = wx.TextCtrl(self.control_panel, value="4", size=(50, -1), style=wx.TE_CENTER)
+        self.div_text = wx.TextCtrl(
+            self.control_panel, value="4", size=(50, -1), style=wx.TE_CENTER
+        )
         self.set_button = wx.Button(self.control_panel, label="Задать")
         self.set_button.Bind(wx.EVT_BUTTON, self.on_set_div)
 
@@ -1941,7 +2061,9 @@ class Foldify(wx.Frame):
                 continue
             p0 = Point2D(p1_rel[0] * 2.0 - 1.0, p1_rel[1] * 2.0 - 1.0)
             p1 = Point2D(p2_rel[0] * 2.0 - 1.0, p2_rel[1] * 2.0 - 1.0)
-            ori_type = LineType.MOUNTAIN if ltype == self.LINE_MOUNTAIN else LineType.VALLEY
+            ori_type = (
+                LineType.MOUNTAIN if ltype == self.LINE_MOUNTAIN else LineType.VALLEY
+            )
             cp.add_line(OriLine(p0, p1, ori_type))
 
         cp.build_graph()
@@ -1965,8 +2087,10 @@ class Foldify(wx.Frame):
 
         if not check_result["foldable"]:
             # Показываем окно с визуализацией ошибок вместо MessageBox
-            error_vertices = [Point2D(p[0], p[1]) if isinstance(p, tuple) else p
-                              for p in check_result["problem_vertices"]]
+            error_vertices = [
+                Point2D(p[0], p[1]) if isinstance(p, tuple) else p
+                for p in check_result["problem_vertices"]
+            ]
             ErrorViewer(self, check_result["crease_pattern"], error_vertices)
             return
 
@@ -1977,13 +2101,18 @@ class Foldify(wx.Frame):
         if not result["success"]:
             # Этот блок теперь должен срабатывать редко, только при других ошибках
             error_text = "\n".join(f"• {e}" for e in result["errors"])
-            wx.MessageBox(f"Возникли проблемы при складывании:\n\n{error_text}",
-                          "Ошибка складывания", wx.OK | wx.ICON_ERROR)
+            wx.MessageBox(
+                f"Возникли проблемы при складывании:\n\n{error_text}",
+                "Ошибка складывания",
+                wx.OK | wx.ICON_ERROR,
+            )
             return
 
         folded_faces = result["folded_faces"]
 
-        if len(self.rel_lines) == 0 or all(ltype == self.LINE_AUX for _, _, ltype in self.rel_lines):
+        if len(self.rel_lines) == 0 or all(
+            ltype == self.LINE_AUX for _, _, ltype in self.rel_lines
+        ):
             single_face = OriFace()
             half = 1.0
             single_face.outline = [
@@ -2082,11 +2211,15 @@ class Foldify(wx.Frame):
             self.SUBMODE_SEGMENT: self.btn_segment,
             self.SUBMODE_BISECTOR: self.btn_bisector,
             self.SUBMODE_INCENTER: self.btn_incenter,
-            self.SUBMODE_PERP: self.btn_perp
+            self.SUBMODE_PERP: self.btn_perp,
         }
         for sub, btn in mapping.items():
-            key = {self.btn_segment: "segment", self.btn_bisector: "bisector",
-                   self.btn_incenter: "incenter", self.btn_perp: "perp"}[btn]
+            key = {
+                self.btn_segment: "segment",
+                self.btn_bisector: "bisector",
+                self.btn_incenter: "incenter",
+                self.btn_perp: "perp",
+            }[btn]
             idx = 1 if self.submode == sub else 0
             btn.SetBitmap(self.icons[key][idx])
 
@@ -2104,12 +2237,9 @@ class Foldify(wx.Frame):
         """
         Сохранить текущее состояние в историю для undo/redo.
         """
-        state = {
-            "div_num": self.div_num,
-            "rel_lines": copy.deepcopy(self.rel_lines)
-        }
+        state = {"div_num": self.div_num, "rel_lines": copy.deepcopy(self.rel_lines)}
         if self.history_index < len(self.history) - 1:
-            self.history = self.history[:self.history_index + 1]
+            self.history = self.history[: self.history_index + 1]
         self.history.append(state)
         self.history_index += 1
         if len(self.history) > self.max_history:
@@ -2172,13 +2302,13 @@ class Foldify(wx.Frame):
         """
         key = event.GetKeyCode()
         if event.ControlDown():
-            if key == ord('Z'):
+            if key == ord("Z"):
                 self.on_undo(None)
-            elif key == ord('Y'):
+            elif key == ord("Y"):
                 self.on_redo(None)
-            elif key == ord('S'):
+            elif key == ord("S"):
                 self.on_export(None)
-            elif key == ord('O'):
+            elif key == ord("O"):
                 self.on_import(None)
         event.Skip()
 
@@ -2191,7 +2321,9 @@ class Foldify(wx.Frame):
             return
 
         usable = min(w, h)
-        self.scale = usable / (usable - 2 * self.margin) if usable > 2 * self.margin else 1.0
+        self.scale = (
+            usable / (usable - 2 * self.margin) if usable > 2 * self.margin else 1.0
+        )
         margin_px = self.margin * self.scale
         size = usable - 2 * margin_px
 
@@ -2206,7 +2338,7 @@ class Foldify(wx.Frame):
             ((left, bottom), (right, bottom)),
             ((right, bottom), (right, top)),
             ((right, top), (left, top)),
-            ((left, top), (left, bottom))
+            ((left, top), (left, bottom)),
         ]
 
         self._grid_bounds = (left, top, right, bottom)
@@ -2276,7 +2408,10 @@ class Foldify(wx.Frame):
         Returns:
             list: Список кортежей (p1_abs, p2_abs, type) для каждой линии.
         """
-        return [(self.rel_to_abs(p1), self.rel_to_abs(p2), ltype) for p1, p2, ltype in self.rel_lines]
+        return [
+            (self.rel_to_abs(p1), self.rel_to_abs(p2), ltype)
+            for p1, p2, ltype in self.rel_lines
+        ]
 
     def get_nearest_point(self, pos):
         """
@@ -2307,10 +2442,12 @@ class Foldify(wx.Frame):
         gy = max(0.0, min(1.0, gy))
         grid_point = (gx, gy)
 
-        candidates = [grid_point] + \
-                     self.rel_endpoint_points + \
-                     list(self.rel_intersections) + \
-                     list(self.rel_invisible)
+        candidates = (
+            [grid_point]
+            + self.rel_endpoint_points
+            + list(self.rel_intersections)
+            + list(self.rel_invisible)
+        )
 
         candidates = list(set(candidates))
         candidates_abs = [self.rel_to_abs(p) for p in candidates if self.rel_to_abs(p)]
@@ -2318,7 +2455,9 @@ class Foldify(wx.Frame):
         if not candidates_abs:
             return None
 
-        return min(candidates_abs, key=lambda p: math.hypot(p[0] - pos[0], p[1] - pos[1]))
+        return min(
+            candidates_abs, key=lambda p: math.hypot(p[0] - pos[0], p[1] - pos[1])
+        )
 
     def update_all_intersections(self):
         """
@@ -2329,14 +2468,20 @@ class Foldify(wx.Frame):
         self.rel_intersections = set()
         self.rel_invisible = set()
 
-        mv_lines = [(p1, p2, ltype) for p1, p2, ltype in self.rel_lines if ltype != self.LINE_AUX]
+        mv_lines = [
+            (p1, p2, ltype)
+            for p1, p2, ltype in self.rel_lines
+            if ltype != self.LINE_AUX
+        ]
         for i in range(len(mv_lines)):
             for j in range(i + 1, len(mv_lines)):
                 inter = line_intersection_rel(mv_lines[i][:2], mv_lines[j][:2])
                 if inter:
                     self.rel_intersections.add(inter)
 
-        aux_lines = [(p1, p2) for p1, p2, ltype in self.rel_lines if ltype == self.LINE_AUX]
+        aux_lines = [
+            (p1, p2) for p1, p2, ltype in self.rel_lines if ltype == self.LINE_AUX
+        ]
 
         for k in range(1, self.div_num):
             y_rel = k / self.div_num
@@ -2345,15 +2490,23 @@ class Foldify(wx.Frame):
             grid_v = ((x_rel, 0.0), (x_rel, 1.0))
             for aux in aux_lines:
                 inter = line_intersection_rel(aux, grid_h)
-                if inter: self.rel_invisible.add(inter)
+                if inter:
+                    self.rel_invisible.add(inter)
                 inter = line_intersection_rel(aux, grid_v)
-                if inter: self.rel_invisible.add(inter)
+                if inter:
+                    self.rel_invisible.add(inter)
 
-        bounds = [((0, 0), (1, 0)), ((1, 0), (1, 1)), ((1, 1), (0, 1)), ((0, 1), (0, 0))]
+        bounds = [
+            ((0, 0), (1, 0)),
+            ((1, 0), (1, 1)),
+            ((1, 1), (0, 1)),
+            ((0, 1), (0, 0)),
+        ]
         for b1, b2 in bounds:
             for aux in aux_lines:
                 inter = line_intersection_rel(aux, (b1, b2))
-                if inter: self.rel_invisible.add(inter)
+                if inter:
+                    self.rel_invisible.add(inter)
 
         for aux in aux_lines:
             for mv_p1, mv_p2, _ in mv_lines:
@@ -2364,7 +2517,8 @@ class Foldify(wx.Frame):
         for i in range(len(aux_lines)):
             for j in range(i + 1, len(aux_lines)):
                 inter = line_intersection_rel(aux_lines[i], aux_lines[j])
-                if inter: self.rel_invisible.add(inter)
+                if inter:
+                    self.rel_invisible.add(inter)
 
     def update_endpoint_points(self):
         """
@@ -2389,7 +2543,7 @@ class Foldify(wx.Frame):
                    start_point и end_point - это точки, ограничивающие сегмент.
         """
         x, y = pos
-        min_dist = float('inf')
+        min_dist = float("inf")
         result = None
 
         for idx, (p1_rel, p2_rel, ltype) in enumerate(self.rel_lines):
@@ -2398,11 +2552,15 @@ class Foldify(wx.Frame):
             points_on_line = [p1, p2]
             for inter_rel in self.rel_intersections:
                 inter_abs = self.rel_to_abs(inter_rel)
-                if inter_abs and self.is_point_on_segment(inter_abs, (p1, p2), tol=1e-3):
+                if inter_abs and self.is_point_on_segment(
+                    inter_abs, (p1, p2), tol=1e-3
+                ):
                     points_on_line.append(inter_abs)
             for inter_rel in self.rel_invisible:
                 inter_abs = self.rel_to_abs(inter_rel)
-                if inter_abs and self.is_point_on_segment(inter_abs, (p1, p2), tol=1e-3):
+                if inter_abs and self.is_point_on_segment(
+                    inter_abs, (p1, p2), tol=1e-3
+                ):
                     points_on_line.append(inter_abs)
 
             points_on_line = sorted(set(points_on_line), key=lambda pt: (pt[0], pt[1]))
@@ -2418,11 +2576,15 @@ class Foldify(wx.Frame):
             points_on_edge = [p1, p2]
             for inter_rel in self.rel_intersections:
                 inter_abs = self.rel_to_abs(inter_rel)
-                if inter_abs and self.is_point_on_segment(inter_abs, (p1, p2), tol=1e-3):
+                if inter_abs and self.is_point_on_segment(
+                    inter_abs, (p1, p2), tol=1e-3
+                ):
                     points_on_edge.append(inter_abs)
             for inter_rel in self.rel_invisible:
                 inter_abs = self.rel_to_abs(inter_rel)
-                if inter_abs and self.is_point_on_segment(inter_abs, (p1, p2), tol=1e-3):
+                if inter_abs and self.is_point_on_segment(
+                    inter_abs, (p1, p2), tol=1e-3
+                ):
                     points_on_edge.append(inter_abs)
 
             points_on_edge = sorted(set(points_on_edge), key=lambda pt: (pt[0], pt[1]))
@@ -2473,11 +2635,14 @@ class Foldify(wx.Frame):
         """
         a, b = segment
         cross = (point[1] - a[1]) * (b[0] - a[0]) - (point[0] - a[0]) * (b[1] - a[1])
-        if abs(cross) > tol: return False
+        if abs(cross) > tol:
+            return False
         dot = (point[0] - a[0]) * (b[0] - a[0]) + (point[1] - a[1]) * (b[1] - a[1])
-        if dot < 0: return False
+        if dot < 0:
+            return False
         squared_len = (b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2
-        if dot > squared_len: return False
+        if dot > squared_len:
+            return False
         return True
 
     def points_equal(self, p1, p2, tol=1e-10):
@@ -2516,10 +2681,25 @@ class Foldify(wx.Frame):
                 points_on_line.append(inter_abs)
         points_on_line = sorted(set(points_on_line), key=lambda pt: (pt[0], pt[1]))
 
-        start_idx = next((i for i, pt in enumerate(points_on_line) if self.points_equal(pt, seg_start)), -1)
-        end_idx = next((i for i, pt in enumerate(points_on_line) if self.points_equal(pt, seg_end)), -1)
+        start_idx = next(
+            (
+                i
+                for i, pt in enumerate(points_on_line)
+                if self.points_equal(pt, seg_start)
+            ),
+            -1,
+        )
+        end_idx = next(
+            (
+                i
+                for i, pt in enumerate(points_on_line)
+                if self.points_equal(pt, seg_end)
+            ),
+            -1,
+        )
 
-        if start_idx == -1 or end_idx == -1: return
+        if start_idx == -1 or end_idx == -1:
+            return
 
         new_lines = []
         if start_idx > 0:
@@ -2563,12 +2743,29 @@ class Foldify(wx.Frame):
                 points_on_line.append(inter_abs)
         points_on_line = sorted(set(points_on_line), key=lambda pt: (pt[0], pt[1]))
 
-        start_idx = next((i for i, pt in enumerate(points_on_line) if self.points_equal(pt, seg_start)), -1)
-        end_idx = next((i for i, pt in enumerate(points_on_line) if self.points_equal(pt, seg_end)), -1)
+        start_idx = next(
+            (
+                i
+                for i, pt in enumerate(points_on_line)
+                if self.points_equal(pt, seg_start)
+            ),
+            -1,
+        )
+        end_idx = next(
+            (
+                i
+                for i, pt in enumerate(points_on_line)
+                if self.points_equal(pt, seg_end)
+            ),
+            -1,
+        )
 
-        if start_idx == -1 or end_idx == -1: return
+        if start_idx == -1 or end_idx == -1:
+            return
 
-        new_type = self.LINE_VALLEY if ltype == self.LINE_MOUNTAIN else self.LINE_MOUNTAIN
+        new_type = (
+            self.LINE_VALLEY if ltype == self.LINE_MOUNTAIN else self.LINE_MOUNTAIN
+        )
 
         new_lines = []
         if start_idx > 0:
@@ -2640,7 +2837,7 @@ class Foldify(wx.Frame):
         """
         if self.submode == self.SUBMODE_BISECTOR:
             self.bisector_points = self.bisector_points[:index]
-            self.bisector_waiting_for_edge = (len(self.bisector_points) == 3)
+            self.bisector_waiting_for_edge = len(self.bisector_points) == 3
         elif self.submode == self.SUBMODE_INCENTER:
             self.incenter_points = self.incenter_points[:index]
         self.canvas.Refresh()
@@ -2656,7 +2853,9 @@ class Foldify(wx.Frame):
             bool: True если переклик был обработан.
         """
         if self.submode == self.SUBMODE_SEGMENT:
-            if self.selected_point and self.points_equal(self.selected_point, point_abs):
+            if self.selected_point and self.points_equal(
+                self.selected_point, point_abs
+            ):
                 self.selected_point = None
                 self.canvas.Refresh()
                 return True
@@ -2674,7 +2873,9 @@ class Foldify(wx.Frame):
                     return True
 
         elif self.submode == self.SUBMODE_PERP:
-            if self.perp_start_point and self.points_equal(self.perp_start_point, point_abs):
+            if self.perp_start_point and self.points_equal(
+                self.perp_start_point, point_abs
+            ):
                 self.perp_start_point = None
                 self.perp_waiting_for_edge = False
                 self.canvas.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
@@ -2694,10 +2895,19 @@ class Foldify(wx.Frame):
         """
         pos = event.GetPosition()
 
-        if self.mode in [self.MODE_DELETE, self.MODE_ALTER] or \
-                (
-                        self.mode == self.MODE_INPUT and self.submode == self.SUBMODE_BISECTOR and self.bisector_waiting_for_edge) or \
-                (self.mode == self.MODE_INPUT and self.submode == self.SUBMODE_PERP and self.perp_waiting_for_edge):
+        if (
+            self.mode in [self.MODE_DELETE, self.MODE_ALTER]
+            or (
+                self.mode == self.MODE_INPUT
+                and self.submode == self.SUBMODE_BISECTOR
+                and self.bisector_waiting_for_edge
+            )
+            or (
+                self.mode == self.MODE_INPUT
+                and self.submode == self.SUBMODE_PERP
+                and self.perp_waiting_for_edge
+            )
+        ):
 
             self.hover_point = None
             self.hovered_line = None
@@ -2723,9 +2933,11 @@ class Foldify(wx.Frame):
         """
         pos = event.GetPosition()
         point_abs = self.get_nearest_point(pos)
-        if not point_abs: return
+        if not point_abs:
+            return
         point_rel = self.abs_to_rel(point_abs)
-        if not point_rel: return
+        if not point_rel:
+            return
 
         left, top, right, bottom = self.get_grid_bounds()
         if not (left <= point_abs[0] <= right and top <= point_abs[1] <= bottom):
@@ -2831,12 +3043,14 @@ class Foldify(wx.Frame):
         v2 = (p2_rel[0] - v_rel[0], p2_rel[1] - v_rel[1])
         len1 = math.hypot(*v1)
         len2 = math.hypot(*v2)
-        if len1 == 0 or len2 == 0: return False
+        if len1 == 0 or len2 == 0:
+            return False
         unit1 = (v1[0] / len1, v1[1] / len1)
         unit2 = (v2[0] / len2, v2[1] / len2)
         bis_dir = (unit1[0] + unit2[0], unit1[1] + unit2[1])
         norm = math.hypot(*bis_dir)
-        if norm < 1e-8: return False
+        if norm < 1e-8:
+            return False
         bis_dir = (bis_dir[0] / norm, bis_dir[1] / norm)
 
         t_max = 10000
@@ -2844,10 +3058,7 @@ class Foldify(wx.Frame):
 
         edge_p1_rel = self.abs_to_rel(edge_p1)
         edge_p2_rel = self.abs_to_rel(edge_p2)
-        inter = line_intersection_rel(
-            (v_rel, bis_end),
-            (edge_p1_rel, edge_p2_rel)
-        )
+        inter = line_intersection_rel((v_rel, bis_end), (edge_p1_rel, edge_p2_rel))
 
         if inter:
             end_abs = self.rel_to_abs(inter)
@@ -2864,16 +3075,15 @@ class Foldify(wx.Frame):
             ((left, bottom), (right, bottom)),
             ((right, bottom), (right, top)),
             ((right, top), (left, top)),
-            ((left, top), (left, bottom))
+            ((left, top), (left, bottom)),
         ]
 
-        min_dist = float('inf')
+        min_dist = float("inf")
         best_end = None
 
         for b1, b2 in bounds:
             inter = line_intersection_rel(
-                (v_rel, bis_end),
-                (self.abs_to_rel(b1), self.abs_to_rel(b2))
+                (v_rel, bis_end), (self.abs_to_rel(b1), self.abs_to_rel(b2))
             )
             if inter:
                 end_abs = self.rel_to_abs(inter)
@@ -2912,7 +3122,8 @@ class Foldify(wx.Frame):
         Returns:
             bool: True если перпендикуляр успешно построен.
         """
-        if not self.perp_start_point: return False
+        if not self.perp_start_point:
+            return False
         start = self.perp_start_point
         start_rel = self.abs_to_rel(start)
         try:
@@ -2956,14 +3167,16 @@ class Foldify(wx.Frame):
         Требует 3 выбранные точки (вершины треугольника).
         Вычисляет инцентр и рисует линии от вершин к инцентру.
         """
-        if len(self.incenter_points) != 3: return
+        if len(self.incenter_points) != 3:
+            return
         a, b, c = self.incenter_points
         a_rel = self.abs_to_rel(a)
         b_rel = self.abs_to_rel(b)
         c_rel = self.abs_to_rel(c)
         center_rel = triangle_incenter(a_rel, b_rel, c_rel)
         center_abs = self.rel_to_abs(center_rel)
-        if not center_abs: return
+        if not center_abs:
+            return
         for p_rel in [a_rel, b_rel, c_rel]:
             self.rel_lines.append((p_rel, center_rel, self.line_type))
         self.incenter_points = []
@@ -2982,30 +3195,35 @@ class Foldify(wx.Frame):
         """
 
         with wx.FileDialog(
-                self, "Экспорт в .orp", wildcard="Проект оригами (*.orp)|*.orp",
-                style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT
+            self,
+            "Экспорт в .orp",
+            wildcard="Проект оригами (*.orp)|*.orp",
+            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
         ) as fileDialog:
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return
             pathname = fileDialog.GetPath()
-            if not pathname.lower().endswith('.orp'):
-                pathname += '.orp'
+            if not pathname.lower().endswith(".orp"):
+                pathname += ".orp"
 
-            data = {
-                "div_num": self.div_num,
-                "lines": []
-            }
+            data = {"div_num": self.div_num, "lines": []}
             for p1_rel, p2_rel, ltype in self.rel_lines:
-                data["lines"].append({
-                    "p1": [round(p1_rel[0], 12), round(p1_rel[1], 12)],
-                    "p2": [round(p2_rel[0], 12), round(p2_rel[1], 12)],
-                    "type": ltype
-                })
+                data["lines"].append(
+                    {
+                        "p1": [round(p1_rel[0], 12), round(p1_rel[1], 12)],
+                        "p2": [round(p2_rel[0], 12), round(p2_rel[1], 12)],
+                        "type": ltype,
+                    }
+                )
 
             try:
-                with open(pathname, 'w', encoding='utf-8') as f:
+                with open(pathname, "w", encoding="utf-8") as f:
                     json.dump(data, f, indent=2)
-                wx.MessageBox(f"Экспортировано: {os.path.basename(pathname)}", "Успех", wx.OK | wx.ICON_INFORMATION)
+                wx.MessageBox(
+                    f"Экспортировано: {os.path.basename(pathname)}",
+                    "Успех",
+                    wx.OK | wx.ICON_INFORMATION,
+                )
             except Exception as e:
                 wx.MessageBox(f"Ошибка экспорта:\n{e}", "Ошибка", wx.OK | wx.ICON_ERROR)
 
@@ -3019,15 +3237,17 @@ class Foldify(wx.Frame):
             event: Событие меню/кнопки wxPython.
         """
         with wx.FileDialog(
-                self, "Импорт .orp", wildcard="Проект оригами (*.orp)|*.orp",
-                style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
+            self,
+            "Импорт .orp",
+            wildcard="Проект оригами (*.orp)|*.orp",
+            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
         ) as fileDialog:
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return
             pathname = fileDialog.GetPath()
 
             try:
-                with open(pathname, 'r', encoding='utf-8') as f:
+                with open(pathname, "r", encoding="utf-8") as f:
                     data = json.load(f)
 
                 if "div_num" not in data or "lines" not in data:
@@ -3039,7 +3259,11 @@ class Foldify(wx.Frame):
 
                 self.rel_lines = []
                 for line in data["lines"]:
-                    if line["type"] not in [self.LINE_MOUNTAIN, self.LINE_VALLEY, self.LINE_AUX]:
+                    if line["type"] not in [
+                        self.LINE_MOUNTAIN,
+                        self.LINE_VALLEY,
+                        self.LINE_AUX,
+                    ]:
                         continue
                     p1_rel = tuple(line["p1"])
                     p2_rel = tuple(line["p2"])
@@ -3050,7 +3274,11 @@ class Foldify(wx.Frame):
                 self.save_state()
                 self.canvas.Refresh()
 
-                wx.MessageBox(f"Импортировано: {len(self.rel_lines)} линий", "Успех", wx.OK | wx.ICON_INFORMATION)
+                wx.MessageBox(
+                    f"Импортировано: {len(self.rel_lines)} линий",
+                    "Успех",
+                    wx.OK | wx.ICON_INFORMATION,
+                )
             except Exception as e:
                 wx.MessageBox(f"Ошибка импорта:\n{e}", "Ошибка", wx.OK | wx.ICON_ERROR)
 
@@ -3069,8 +3297,10 @@ class Foldify(wx.Frame):
         if result["foldable"]:
             PatternViewer(self, result["crease_pattern"])
         else:
-            error_vertices = [Point2D(p[0], p[1]) if isinstance(p, tuple) else p
-                              for p in result["problem_vertices"]]
+            error_vertices = [
+                Point2D(p[0], p[1]) if isinstance(p, tuple) else p
+                for p in result["problem_vertices"]
+            ]
             ErrorViewer(self, result["crease_pattern"], error_vertices)
 
     def check_foldability(self) -> dict:
@@ -3094,18 +3324,22 @@ class Foldify(wx.Frame):
 
         def is_border(p: Point2D, tol=1e-8) -> bool:
             """
-                    Проверить, находится ли точка на границе квадратного листа бумаги.
+            Проверить, находится ли точка на границе квадратного листа бумаги.
 
-                    Args:
-                        p (Point2D): Проверяемая точка с координатами x и y.
-                        tol (float): Допуск расстояния для определения граничной точки.
+            Args:
+                p (Point2D): Проверяемая точка с координатами x и y.
+                tol (float): Допуск расстояния для определения граничной точки.
 
-                    Returns:
-                        bool: True, если точка находится на одной из четырёх граней квадрата.
-                              False, если точка находится внутри квадрата или полностью вне его.
+            Returns:
+                bool: True, если точка находится на одной из четырёх граней квадрата.
+                      False, если точка находится внутри квадрата или полностью вне его.
             """
-            return (abs(p.x - 1.0) < tol or abs(p.x + 1.0) < tol or
-                    abs(p.y - 1.0) < tol or abs(p.y + 1.0) < tol)
+            return (
+                abs(p.x - 1.0) < tol
+                or abs(p.x + 1.0) < tol
+                or abs(p.y - 1.0) < tol
+                or abs(p.y + 1.0) < tol
+            )
 
         fold_vertices = defaultdict(list)
 
@@ -3139,7 +3373,9 @@ class Foldify(wx.Frame):
                 diff = (ang - prev_ang + math.pi) % (2 * math.pi) - math.pi
                 if abs(diff) < 1e-8:
                     if unique_rays[-1][0] != typ:
-                        errors.append(f"Вершина {v_point}: конфликт типов складок в одном направлении")
+                        errors.append(
+                            f"Вершина {v_point}: конфликт типов складок в одном направлении"
+                        )
                         problem_vertices.add(v_point)
                 else:
                     unique_rays.append((typ, ang))
@@ -3152,11 +3388,14 @@ class Foldify(wx.Frame):
 
             if not is_border_vertex and n % 2 != 0:
                 errors.append(
-                    f"Вершина {v_point}: Нарушение первого правила Кавасаки - нечётное количество складок ({n})")
+                    f"Вершина {v_point}: Нарушение первого правила Кавасаки - нечётное количество складок ({n})"
+                )
                 problem_vertices.add(v_point)
 
             if n < 2 and not is_border_vertex:
-                errors.append(f"Вершина {v_point}: слишком мало складок ({n}) для внутренней вершины")
+                errors.append(
+                    f"Вершина {v_point}: слишком мало складок ({n}) для внутренней вершины"
+                )
                 problem_vertices.add(v_point)
 
             # Подсчёт M и V
@@ -3166,7 +3405,8 @@ class Foldify(wx.Frame):
             if not is_border_vertex and n >= 2:
                 if abs(m_count - v_count) != 2:
                     errors.append(
-                        f"Вершина {v_point}: Нарушение второго правила Кавасаки - разность длин и гор не равна 2, |M−V|={abs(m_count - v_count)} (M={m_count}, V={v_count})")
+                        f"Вершина {v_point}: Нарушение второго правила Кавасаки - разность длин и гор не равна 2, |M−V|={abs(m_count - v_count)} (M={m_count}, V={v_count})"
+                    )
                     problem_vertices.add(v_point)
 
             if n >= 3 and not is_border_vertex:
@@ -3181,11 +3421,17 @@ class Foldify(wx.Frame):
                 sum_odd = sum(angles[i] for i in range(1, n, 2))
 
                 if abs(math.degrees(sum_even) - 180.0) > 2.0:
-                    errors.append("Нарушение третьего правила Кавасаки - сумма четных и нечетных углов не равна 180°")
-                    errors.append(f"Вершина {v_point}: сумма четных углов = {math.degrees(sum_even):.1f}° ≠ 180°")
+                    errors.append(
+                        "Нарушение третьего правила Кавасаки - сумма четных и нечетных углов не равна 180°"
+                    )
+                    errors.append(
+                        f"Вершина {v_point}: сумма четных углов = {math.degrees(sum_even):.1f}° ≠ 180°"
+                    )
                     problem_vertices.add(v_point)
                 if abs(math.degrees(sum_odd) - 180.0) > 2.0:
-                    errors.append(f"Вершина {v_point}: Сумма нечётных углов = {math.degrees(sum_odd):.1f}° ≠ 180°")
+                    errors.append(
+                        f"Вершина {v_point}: Сумма нечётных углов = {math.degrees(sum_odd):.1f}° ≠ 180°"
+                    )
                     problem_vertices.add(v_point)
 
         if errors:
@@ -3193,14 +3439,14 @@ class Foldify(wx.Frame):
                 "foldable": False,
                 "errors": errors,
                 "problem_vertices": list(problem_vertices),
-                "crease_pattern": cp
+                "crease_pattern": cp,
             }
 
         return {
             "foldable": True,
             "errors": [],
             "problem_vertices": [],
-            "crease_pattern": cp
+            "crease_pattern": cp,
         }
 
     @staticmethod
@@ -3250,7 +3496,9 @@ class Foldify(wx.Frame):
         left, top, right, bottom = self.get_grid_bounds()
         dc.SetPen(wx.Pen(wx.BLACK, 2))
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
-        dc.DrawRectangle(self._i(left), self._i(top), self._i(right - left), self._i(bottom - top))
+        dc.DrawRectangle(
+            self._i(left), self._i(top), self._i(right - left), self._i(bottom - top)
+        )
 
     def draw_grid_lines(self, dc):
         """
@@ -3280,7 +3528,12 @@ class Foldify(wx.Frame):
         dc.SetPen(wx.Pen(wx.Colour(180, 180, 180), 1))
         for p1_abs, p2_abs, ltype in self.get_abs_lines():
             if ltype == self.LINE_AUX:
-                dc.DrawLine(self._i(p1_abs[0]), self._i(p1_abs[1]), self._i(p2_abs[0]), self._i(p2_abs[1]))
+                dc.DrawLine(
+                    self._i(p1_abs[0]),
+                    self._i(p1_abs[1]),
+                    self._i(p2_abs[0]),
+                    self._i(p2_abs[1]),
+                )
 
     def draw_main_lines(self, dc):
         """
@@ -3296,7 +3549,12 @@ class Foldify(wx.Frame):
                 dc.SetPen(wx.Pen(wx.Colour(0, 0, 255), 2))
             else:
                 continue
-            dc.DrawLine(self._i(p1_abs[0]), self._i(p1_abs[1]), self._i(p2_abs[0]), self._i(p2_abs[1]))
+            dc.DrawLine(
+                self._i(p1_abs[0]),
+                self._i(p1_abs[1]),
+                self._i(p2_abs[0]),
+                self._i(p2_abs[1]),
+            )
 
     def draw_hovered_segment(self, dc):
         """
@@ -3334,7 +3592,7 @@ class Foldify(wx.Frame):
         color_map = {
             self.LINE_MOUNTAIN: wx.Colour(255, 0, 0),
             self.LINE_VALLEY: wx.Colour(0, 0, 255),
-            self.LINE_AUX: wx.Colour(180, 180, 180)
+            self.LINE_AUX: wx.Colour(180, 180, 180),
         }
         color = color_map.get(self.line_type, wx.Colour(255, 0, 0))
 
@@ -3360,7 +3618,7 @@ class Foldify(wx.Frame):
         color_map = {
             self.LINE_MOUNTAIN: wx.Colour(255, 0, 0),
             self.LINE_VALLEY: wx.Colour(0, 0, 255),
-            self.LINE_AUX: wx.Colour(180, 180, 180)
+            self.LINE_AUX: wx.Colour(180, 180, 180),
         }
         color = color_map.get(self.line_type, wx.Colour(255, 0, 0))
 
@@ -3386,7 +3644,7 @@ class Foldify(wx.Frame):
         color_map = {
             self.LINE_MOUNTAIN: wx.Colour(255, 0, 0),
             self.LINE_VALLEY: wx.Colour(0, 0, 255),
-            self.LINE_AUX: wx.Colour(180, 180, 180)
+            self.LINE_AUX: wx.Colour(180, 180, 180),
         }
         color = color_map.get(self.line_type, wx.Colour(255, 0, 0))
 
@@ -3408,11 +3666,15 @@ class Foldify(wx.Frame):
         color_map = {
             self.LINE_MOUNTAIN: wx.Colour(255, 0, 0),
             self.LINE_VALLEY: wx.Colour(0, 0, 255),
-            self.LINE_AUX: wx.Colour(180, 180, 180)
+            self.LINE_AUX: wx.Colour(180, 180, 180),
         }
         color = color_map.get(self.line_type, wx.Colour(255, 0, 0))
 
-        if self.submode == self.SUBMODE_SEGMENT and self.selected_point and self.hover_point:
+        if (
+            self.submode == self.SUBMODE_SEGMENT
+            and self.selected_point
+            and self.hover_point
+        ):
             dc.SetPen(wx.Pen(color, 2, wx.PENSTYLE_DOT))
             sp = self.selected_point
             hp = self.hover_point
@@ -3423,7 +3685,9 @@ class Foldify(wx.Frame):
             pts = self.bisector_points[:3]
             for i in range(len(pts) - 1):
                 p1, p2 = pts[i], pts[i + 1]
-                dc.DrawLine(self._i(p1[0]), self._i(p1[1]), self._i(p2[0]), self._i(p2[1]))
+                dc.DrawLine(
+                    self._i(p1[0]), self._i(p1[1]), self._i(p2[0]), self._i(p2[1])
+                )
 
             if len(pts) == 3:
                 v = pts[1]
@@ -3456,11 +3720,19 @@ class Foldify(wx.Frame):
                         norm = math.hypot(*bis_dir)
                         if norm > 1e-8:
                             bis_dir = (bis_dir[0] / norm, bis_dir[1] / norm)
-                            end_rel = (v_rel[0] + 500 * bis_dir[0], v_rel[1] + 500 * bis_dir[1])
+                            end_rel = (
+                                v_rel[0] + 500 * bis_dir[0],
+                                v_rel[1] + 500 * bis_dir[1],
+                            )
                             end_abs = self.rel_to_abs(end_rel)
                             if end_abs:
                                 dc.SetPen(wx.Pen(color, 2, wx.PENSTYLE_DOT))
-                                dc.DrawLine(self._i(v[0]), self._i(v[1]), self._i(end_abs[0]), self._i(end_abs[1]))
+                                dc.DrawLine(
+                                    self._i(v[0]),
+                                    self._i(v[1]),
+                                    self._i(end_abs[0]),
+                                    self._i(end_abs[1]),
+                                )
 
         elif self.submode == self.SUBMODE_INCENTER:
             for p in self.incenter_points:
@@ -3484,8 +3756,12 @@ class Foldify(wx.Frame):
                     if center_abs:
                         dc.SetPen(wx.Pen(color, 2, wx.PENSTYLE_DOT))
                         for p in points:
-                            dc.DrawLine(self._i(p[0]), self._i(p[1]),
-                                        self._i(center_abs[0]), self._i(center_abs[1]))
+                            dc.DrawLine(
+                                self._i(p[0]),
+                                self._i(p[1]),
+                                self._i(center_abs[0]),
+                                self._i(center_abs[1]),
+                            )
 
                         dc.SetBrush(wx.Brush(color))
                         dc.SetPen(wx.Pen(color, 2))
@@ -3494,8 +3770,12 @@ class Foldify(wx.Frame):
                 else:
                     dc.SetPen(wx.Pen(color, 2, wx.PENSTYLE_DOT))
                     for p in self.incenter_points:
-                        dc.DrawLine(self._i(p[0]), self._i(p[1]),
-                                    self._i(self.hover_point[0]), self._i(self.hover_point[1]))
+                        dc.DrawLine(
+                            self._i(p[0]),
+                            self._i(p[1]),
+                            self._i(self.hover_point[0]),
+                            self._i(self.hover_point[1]),
+                        )
 
         elif self.submode == self.SUBMODE_PERP:
             if self.perp_start_point and self.hovered_segment:
@@ -3504,7 +3784,7 @@ class Foldify(wx.Frame):
                     idx, a, b, _, is_border = self.hovered_segment
                 except ValueError:
                     return
-                p1, p2 = (self.square_edges[idx] if is_border else (a, b))
+                p1, p2 = self.square_edges[idx] if is_border else (a, b)
 
                 dx = p2[0] - p1[0]
                 dy = p2[1] - p1[1]
@@ -3522,7 +3802,12 @@ class Foldify(wx.Frame):
                 foot = (p1[0] + t * dx, p1[1] + t * dy)
 
                 dc.SetPen(wx.Pen(color, 2, wx.PENSTYLE_DOT))
-                dc.DrawLine(self._i(start[0]), self._i(start[1]), self._i(foot[0]), self._i(foot[1]))
+                dc.DrawLine(
+                    self._i(start[0]),
+                    self._i(start[1]),
+                    self._i(foot[0]),
+                    self._i(foot[1]),
+                )
                 dc.SetBrush(wx.Brush(color))
                 dc.SetPen(wx.Pen(color, 2))
                 dc.DrawCircle(self._i(foot[0]), self._i(foot[1]), 6)
@@ -3575,10 +3860,19 @@ class Foldify(wx.Frame):
         Args:
             dc: Контекст устройства wxPython.
         """
-        if self.mode == self.MODE_INPUT and self.submode == self.SUBMODE_SEGMENT and self.selected_point and self.hover_point:
-            color = (wx.Colour(255, 0, 0) if self.line_type == self.LINE_MOUNTAIN else
-                     wx.Colour(0, 0, 255) if self.line_type == self.LINE_VALLEY else
-                     wx.Colour(180, 180, 180))
+        if (
+            self.mode == self.MODE_INPUT
+            and self.submode == self.SUBMODE_SEGMENT
+            and self.selected_point
+            and self.hover_point
+        ):
+            color = (
+                wx.Colour(255, 0, 0)
+                if self.line_type == self.LINE_MOUNTAIN
+                else wx.Colour(0, 0, 255)
+                if self.line_type == self.LINE_VALLEY
+                else wx.Colour(180, 180, 180)
+            )
             dc.SetPen(wx.Pen(color, 2, wx.PENSTYLE_DOT))
             sp = self.selected_point
             hp = self.hover_point
@@ -3596,7 +3890,14 @@ class Foldify(wx.Frame):
             if rel:
                 x, y = rel
                 text = f"({x:.3f}, {y:.3f})"
-                dc.SetFont(wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
+                dc.SetFont(
+                    wx.Font(
+                        10,
+                        wx.FONTFAMILY_DEFAULT,
+                        wx.FONTSTYLE_NORMAL,
+                        wx.FONTWEIGHT_NORMAL,
+                    )
+                )
                 dc.SetTextForeground(wx.Colour(100, 100, 100))
                 tw, th = dc.GetTextExtent(text)
                 pos = self.hover_point
@@ -3619,8 +3920,11 @@ class Foldify(wx.Frame):
             self.update_grid_size()
             self.save_state()
         except ValueError:
-            wx.MessageBox("Введите целое число от 1 до 100", "Ошибка", wx.OK | wx.ICON_ERROR)
+            wx.MessageBox(
+                "Введите целое число от 1 до 100", "Ошибка", wx.OK | wx.ICON_ERROR
+            )
             self.div_text.SetValue(str(self.div_num))
+
 
 class PatternViewer(wx.Frame):
     """
@@ -3642,7 +3946,9 @@ class PatternViewer(wx.Frame):
             parent: Родительское окно.
             crease_pattern (CreasePattern): Паттерн для отображения.
         """
-        super().__init__(parent, title="Проверка складывания - Узор корректен", size=(800, 800))
+        super().__init__(
+            parent, title="Проверка складывания - Узор корректен", size=(800, 800)
+        )
         self.crease_pattern = crease_pattern
         self.panel = wx.Panel(self)
         self.panel.Bind(wx.EVT_PAINT, self.on_paint)
@@ -3676,10 +3982,7 @@ class PatternViewer(wx.Frame):
         dc.SetPen(wx.Pen(wx.BLACK, 2))
         dc.SetBrush(wx.Brush(wx.WHITE))
         dc.DrawRectangle(
-            int(cx - scale),
-            int(cy - scale),
-            int(2 * scale),
-            int(2 * scale)
+            int(cx - scale), int(cy - scale), int(2 * scale), int(2 * scale)
         )
 
         for line in self.crease_pattern.lines:
@@ -3706,6 +4009,7 @@ class PatternViewer(wx.Frame):
             x = cx + p.x * scale
             y = cy - p.y * scale
             dc.DrawCircle(int(x), int(y), 3)
+
 
 if __name__ == "__main__":
     app = wx.App()
