@@ -1748,7 +1748,7 @@ class Foldify(wx.Frame):
     LINE_VALLEY = "valley"
     LINE_AUX = "aux"
 
-    def __init__(self, parent, title, s="icons"):
+    def __init__(self, parent, title, s="src"):
         """
         Инициализировать главное окно приложения.
 
@@ -1758,7 +1758,7 @@ class Foldify(wx.Frame):
         Args:
             parent: Родительское окно.
             title (str): Заголовок окна.
-            s (str): Директория с иконками для кнопок инструментов. По умолчанию "icons".
+            s (str): Директория с иконками для кнопок инструментов. По умолчанию "src".
         """
         super(Foldify, self).__init__(parent, title=title, size=(900, 650),
                                       style=wx.DEFAULT_FRAME_STYLE | wx.RESIZE_BORDER)
