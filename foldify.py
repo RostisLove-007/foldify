@@ -1969,15 +1969,15 @@ class Foldify(wx.Frame):
         )
         self.btn_perp.Bind(wx.EVT_BUTTON, lambda e: self.set_submode(self.SUBMODE_PERP))
 
-        self.div_label = wx.StaticText(self.control_panel, label="Делений")
+        self.div_label = wx.StaticText(self.control_panel, label="Размер сетки")
         self.div_text = wx.TextCtrl(
             self.control_panel, value="4", size=(50, -1), style=wx.TE_CENTER
         )
         self.set_button = wx.Button(self.control_panel, label="Задать")
         self.set_button.Bind(wx.EVT_BUTTON, self.on_set_div)
 
-        self.undo_button = wx.Button(self.control_panel, label="Отмена")
-        self.redo_button = wx.Button(self.control_panel, label="Повтор")
+        self.undo_button = wx.Button(self.control_panel, label="Назад")
+        self.redo_button = wx.Button(self.control_panel, label="Вперед")
         self.check_button = wx.Button(self.control_panel, label="Проверить складывание")
 
         self.fold_button = wx.Button(self.control_panel, label="Сложить")
