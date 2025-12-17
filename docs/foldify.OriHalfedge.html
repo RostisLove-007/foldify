@@ -1,0 +1,899 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "DTD/xhtml1-strict.dtd">
+<html>
+  
+
+  <head>
+    
+    <title>foldify.OriHalfedge</title>
+    <meta name="generator" content="pydoctor 25.10.1"> 
+        
+    </meta>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1" />
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="apidocs.css" />
+    <link rel="stylesheet" type="text/css" href="extra.css" />
+    
+</head>
+
+  <body>
+
+    
+
+    <nav class="navbar navbar-default mainnavbar">
+      
+  
+  <div class="container-fluid">
+
+
+    <div class="navbar-header">
+      
+      <div class="navlinks">
+        <span class="navbar-brand">
+          foldify <a href="index.html">API Documentation</a>
+        </span>
+
+        <a href="moduleIndex.html">
+          Modules
+        </a>
+
+        <a href="classIndex.html">
+          Classes
+        </a>
+
+        <a href="nameIndex.html">
+          Names
+        </a>
+
+        <div id="search-box-container">
+          <div class="input-group">
+            <input id="search-box" type="search" name="search-query" placeholder="Search..." aria-label="Search" minlength="2" class="form-control" autocomplete="off" />
+            
+            <span class="input-group-btn">
+              <a style="display: none;" class="btn btn-default" id="search-clear-button" title="Clear" onclick="clearSearch()"><img src="fonts/x-circle.svg" alt="Clear" /></a>
+              <a class="btn btn-default" id="apidocs-help-button" title="Help" href="apidocs-help.html"><img src="fonts/info.svg" alt="Help" /></a>
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="search-results-container" style="display: none;">
+        
+        <div id="search-buttons">
+          <span class="label label-default" id="search-docstrings-button">
+          <label class="checkbox-inline">
+            <input type="checkbox" id="toggle-search-in-docstrings-checkbox" value="false" onclick="toggleSearchInDocstrings()">
+              search in docstrings
+            </input>
+          </label>
+          </span>
+          
+        </div>
+        
+        <noscript>
+            <h1>Cannot search: JavaScript is not supported/enabled in your browser.</h1>
+        </noscript>
+
+        <div id="search-status"> </div>
+
+        <div class="warning" id="search-warn-box" style="display: none;">
+          <p class="rst-last"><span id="search-warn"></span></p>
+        </div>
+
+        <table id="search-results">
+          <!-- Filled dynamically by JS -->
+        </table>
+        
+        <div style="margin-top: 10px;">
+          <p>For more information on the search, visit the <a href="apidocs-help.html#rst-search">help page</a>.</p>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+</nav>
+    
+    <div class="container-fluid">
+
+      <!-- Side navigation -->
+      <div class="sidebarcontainer" style="display: none;">
+        
+        <div class="sidebar"><nav class="sidebar">
+  
+
+  <div>
+
+      <div class="thingTitle">
+        <span>Class</span>
+        <code class="thisobject"><a href="foldify.OriHalfedge.html" class="internal-link" title="This class"><wbr></wbr>Ori<wbr></wbr>Halfedge</a></code> 
+      </div>
+      
+      <div>
+        
+
+        
+         
+
+        
+        
+
+        <div class="childrenKindTitle">Methods</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#__post_init__" class="internal-link" title="foldify.OriHalfedge.__post_init__">__post<wbr></wbr>_init__</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#__repr__" class="internal-link" title="foldify.OriHalfedge.__repr__">__repr__</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#direction_vector" class="internal-link" title="foldify.OriHalfedge.direction_vector">direction<wbr></wbr>_vector</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+
+        <div class="childrenKindTitle">Attributes</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#edge" class="internal-link" title="foldify.OriHalfedge.edge">edge</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#face" class="internal-link" title="foldify.OriHalfedge.face">face</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#next" class="internal-link" title="foldify.OriHalfedge.next">next</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#opposite" class="internal-link" title="foldify.OriHalfedge.opposite">opposite</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#prev" class="internal-link" title="foldify.OriHalfedge.prev">prev</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#vertex" class="internal-link" title="foldify.OriHalfedge.vertex">vertex</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+        
+      </div>
+  </div><div>
+
+      <div class="thingTitle">
+        <span>Module</span>
+        <code><a href="index.html" class="internal-link" title="The parent of this class">foldify</a></code> 
+      </div>
+      
+      <div>
+        
+
+        
+         
+
+        <div class="childrenKindTitle">Classes</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.CreasePattern.html" class="internal-link" title="foldify.CreasePattern"><wbr></wbr>Crease<wbr></wbr>Pattern</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.ErrorViewer.html" class="internal-link" title="foldify.ErrorViewer"><wbr></wbr>Error<wbr></wbr>Viewer</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.FaceBuilder.html" class="internal-link" title="foldify.FaceBuilder"><wbr></wbr>Face<wbr></wbr>Builder</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.FoldabilityChecker.html" class="internal-link" title="foldify.FoldabilityChecker"><wbr></wbr>Foldability<wbr></wbr>Checker</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.FoldedModel.html" class="internal-link" title="foldify.FoldedModel"><wbr></wbr>Folded<wbr></wbr>Model</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.FoldedModelBuilder.html" class="internal-link" title="foldify.FoldedModelBuilder"><wbr></wbr>Folded<wbr></wbr>Model<wbr></wbr>Builder</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.Foldify.html" class="internal-link" title="foldify.Foldify"><wbr></wbr>Foldify</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.FoldViewer.html" class="internal-link" title="foldify.FoldViewer"><wbr></wbr>Fold<wbr></wbr>Viewer</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.GeometryUtil.html" class="internal-link" title="foldify.GeometryUtil"><wbr></wbr>Geometry<wbr></wbr>Util</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.LayerRelation.html" class="internal-link" title="foldify.LayerRelation"><wbr></wbr>Layer<wbr></wbr>Relation</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.LineType.html" class="internal-link" title="foldify.LineType"><wbr></wbr>Line<wbr></wbr>Type</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.OriEdge.html" class="internal-link" title="foldify.OriEdge"><wbr></wbr>Ori<wbr></wbr>Edge</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.OriFace.html" class="internal-link" title="foldify.OriFace"><wbr></wbr>Ori<wbr></wbr>Face</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.OrigamiFolder.html" class="internal-link" title="foldify.OrigamiFolder"><wbr></wbr>Origami<wbr></wbr>Folder</a></code>
+            </div>
+        
+
+    </li><li class=" thisobject">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.OriHalfedge.html" class="internal-link" title="foldify.OriHalfedge"><wbr></wbr>Ori<wbr></wbr>Halfedge</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.OriLine.html" class="internal-link" title="foldify.OriLine"><wbr></wbr>Ori<wbr></wbr>Line</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.OriVertex.html" class="internal-link" title="foldify.OriVertex"><wbr></wbr>Ori<wbr></wbr>Vertex</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.PatternViewer.html" class="internal-link" title="foldify.PatternViewer"><wbr></wbr>Pattern<wbr></wbr>Viewer</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D"><wbr></wbr>Point2<wbr></wbr>D</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="foldify.StackingAnalyzer.html" class="internal-link" title="foldify.StackingAnalyzer"><wbr></wbr>Stacking<wbr></wbr>Analyzer</a></code>
+            </div>
+        
+
+    </li>
+</ul>
+
+        <div class="childrenKindTitle">Functions</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#line_intersection_rel" class="internal-link" title="foldify.line_intersection_rel">line<wbr></wbr>_intersection<wbr></wbr>_rel</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#point_to_line_distance" class="internal-link" title="foldify.point_to_line_distance">point<wbr></wbr>_to<wbr></wbr>_line<wbr></wbr>_distance</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#reflect_point_over_line" class="internal-link" title="foldify.reflect_point_over_line">reflect<wbr></wbr>_point<wbr></wbr>_over<wbr></wbr>_line</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#triangle_incenter" class="internal-link" title="foldify.triangle_incenter">triangle<wbr></wbr>_incenter</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#_merge_close_points" class="internal-link" title="foldify._merge_close_points">_merge<wbr></wbr>_close<wbr></wbr>_points</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+
+        <div class="childrenKindTitle">Variables</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#EPS" class="internal-link" title="foldify.EPS">EPS</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="index.html#EPS_AREA" class="internal-link" title="foldify.EPS_AREA">EPS<wbr></wbr>_AREA</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+        
+      </div>
+  </div>
+
+</nav>
+        </div>
+        <div id="collapse-sidebar">
+          <a class="btn btn-link" onclick="toggleSideBarCollapse()" title="Toggle Sidebar Collapse">
+          </a>
+        </div> 
+        <script src="sidebartoggle.js" type="text/javascript"></script>
+       
+      </div>
+
+      <main class="">
+        
+
+        
+
+        <div class="page-header">
+          <h1 class="class"><code><code><a href="index.html" class="internal-link">foldify</a></code><wbr></wbr>.<code><a href="foldify.OriHalfedge.html" class="internal-link" title="foldify.OriHalfedge">OriHalfedge</a></code></code></h1>
+          <div id="show-private">
+            <button class="btn btn-link" onclick="togglePrivate()">Toggle Private API</button>
+          </div>
+        </div>
+
+        <div class="categoryHeader">
+          class documentation
+        </div>
+
+        <div class="extrasDocstring">
+          <p class="class-signature"><code><span class="py-keyword">class</span> <span class="py-defname">OriHalfedge</span>:</code></p><p><a href="classIndex.html#foldify.OriHalfedge">View In Hierarchy</a></p>
+        </div>
+
+        <div class="moduleDocstring">
+          <div><p>Полурёбро (half-edge) в представлении двойного связного списка.</p>
+<dl class="rst-docutils">
+<dt>Attributes:</dt>
+<dd>edge (OriEdge): Связанное ребро.
+face (OriFace): Грань, которой принадлежит полурёбро.
+vertex (OriVertex): Вершина в конце полурёбра.
+next (OriHalfedge): Следующее полурёбро в цикле грани.
+prev (OriHalfedge): Предыдущее полурёбро в цикле грани.
+opposite (OriHalfedge): Противоположное полурёбро.</dd>
+</dl>
+</div>
+        </div>
+
+        <div id="split-tables">
+          <table class="children sortable" id="id8">
+  
+  
+  <tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#__post_init__" class="internal-link" title="foldify.OriHalfedge.__post_init__">__post<wbr></wbr>_init__</a></code></td>
+    <td>Инициализация после создания объекта.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#__repr__" class="internal-link" title="foldify.OriHalfedge.__repr__">__repr__</a></code></td>
+    <td>Возвращает строковое представление полуребра.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#direction_vector" class="internal-link" title="foldify.OriHalfedge.direction_vector">direction<wbr></wbr>_vector</a></code></td>
+    <td>Получить вектор направления полурёбра.</td>
+  </tr><tr class="classvariable">
+    
+    <td>Class Variable</td>
+    <td><code><a href="#edge" class="internal-link" title="foldify.OriHalfedge.edge">edge</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="classvariable">
+    
+    <td>Class Variable</td>
+    <td><code><a href="#face" class="internal-link" title="foldify.OriHalfedge.face">face</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="classvariable">
+    
+    <td>Class Variable</td>
+    <td><code><a href="#next" class="internal-link" title="foldify.OriHalfedge.next">next</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="classvariable">
+    
+    <td>Class Variable</td>
+    <td><code><a href="#opposite" class="internal-link" title="foldify.OriHalfedge.opposite">opposite</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="classvariable">
+    
+    <td>Class Variable</td>
+    <td><code><a href="#prev" class="internal-link" title="foldify.OriHalfedge.prev">prev</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#vertex" class="internal-link" title="foldify.OriHalfedge.vertex">vertex</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr>
+</table>
+          
+
+            
+        </div>
+
+        <div id="child-list">
+          <div class="basemethod">
+  
+  
+  <a name="foldify.OriHalfedge.__post_init__">
+    
+  </a>
+  <a name="__post_init__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">__post_init__</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>):</span>
+    
+    <a class="headerLink" href="#__post_init__" title="foldify.OriHalfedge.__post_init__">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Инициализация после создания объекта.</p>
+<p>Устанавливает вершину на основе направления и ориентации грани.</p>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.OriHalfedge.__repr__">
+    
+  </a>
+  <a name="__repr__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">__repr__</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>):</span>
+    
+    <a class="headerLink" href="#__repr__" title="foldify.OriHalfedge.__repr__">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Возвращает строковое представление полуребра.</p>
+<dl class="rst-docutils">
+<dt>Returns:</dt>
+<dd>Строка вида "HE(точка_начало→точка_конец)".</dd>
+</dl>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="foldify.OriHalfedge.direction_vector">
+    
+  </a>
+  <a name="direction_vector">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">direction_vector</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>) -&gt; <code><a href="foldify.Point2D.html" class="internal-link" title="foldify.Point2D">Point2D</a></code>:</span>
+    
+    <a class="headerLink" href="#direction_vector" title="foldify.OriHalfedge.direction_vector">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Получить вектор направления полурёбра.</p>
+<dl class="rst-docutils">
+<dt>Returns:</dt>
+<dd>Point2D: Вектор от начальной вершины к конечной.</dd>
+</dl>
+</div>
+  </div>
+</div><div class="baseclassvariable">
+  
+  
+  <a name="foldify.OriHalfedge.edge">
+    
+  </a>
+  <a name="edge">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">edge</span>: <code><a href="foldify.OriEdge.html" class="internal-link" title="foldify.OriEdge">OriEdge</a></code> =
+    
+    <a class="headerLink" href="#edge" title="foldify.OriHalfedge.edge">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseclassvariable">
+  
+  
+  <a name="foldify.OriHalfedge.face">
+    
+  </a>
+  <a name="face">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">face</span>: <code><a href="foldify.OriFace.html" class="internal-link" title="foldify.OriFace">OriFace</a> | None</code> =
+    
+    <a class="headerLink" href="#face" title="foldify.OriHalfedge.face">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseclassvariable">
+  
+  
+  <a name="foldify.OriHalfedge.next">
+    
+  </a>
+  <a name="next">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">next</span>: <code><a href="foldify.OriHalfedge.html" class="internal-link" title="foldify.OriHalfedge">OriHalfedge</a> | None</code> =
+    
+    <a class="headerLink" href="#next" title="foldify.OriHalfedge.next">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseclassvariable">
+  
+  
+  <a name="foldify.OriHalfedge.opposite">
+    
+  </a>
+  <a name="opposite">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">opposite</span>: <code><a href="foldify.OriHalfedge.html" class="internal-link" title="foldify.OriHalfedge">OriHalfedge</a> | None</code> =
+    
+    <a class="headerLink" href="#opposite" title="foldify.OriHalfedge.opposite">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseclassvariable">
+  
+  
+  <a name="foldify.OriHalfedge.prev">
+    
+  </a>
+  <a name="prev">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">prev</span>: <code><a href="foldify.OriHalfedge.html" class="internal-link" title="foldify.OriHalfedge">OriHalfedge</a> | None</code> =
+    
+    <a class="headerLink" href="#prev" title="foldify.OriHalfedge.prev">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable">
+  
+  
+  <a name="foldify.OriHalfedge.vertex">
+    
+  </a>
+  <a name="vertex">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">vertex</span>: <code><a href="foldify.OriVertex.html" class="internal-link" title="foldify.OriVertex">OriVertex</a></code> =
+    
+    <a class="headerLink" href="#vertex" title="foldify.OriHalfedge.vertex">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div>
+        </div>
+      
+      </main>
+    </div>
+
+    <footer class="navbar navbar-default">
+
+  
+  <div class="container-fluid">
+    <a href="index.html">API Documentation</a> for foldify,
+  generated by <a href="https://github.com/twisted/pydoctor/">pydoctor</a>
+    25.10.1 at 2025-12-16 02:49:43.
+  </div>
+
+  <!-- Search related scripts needs to be loaded at the end of HTML 
+    parsing not to introduce overhead and display HTML data asap -->
+  <script src="ajax.js" type="text/javascript"></script>
+  <script src="searchlib.js" type="text/javascript"></script>
+  <script src="search.js" type="text/javascript"></script>
+
+</footer>
+  
+    <script src="pydoctor.js" type="text/javascript"></script>
+
+  </body>
+</html>
